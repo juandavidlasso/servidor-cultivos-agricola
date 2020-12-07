@@ -30,13 +30,10 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false
       },
-<<<<<<< HEAD
       area: {
         type: Sequelize.FLOAT,
         allowNull: true
       },
-=======
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
       suerte_id: {
         type: Sequelize.INTEGER,
         allowNull: false

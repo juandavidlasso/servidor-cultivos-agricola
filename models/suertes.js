@@ -38,11 +38,6 @@ module.exports = (sequelize, DataTypes) => {
   Suertes.associate = function(models) {
     // suerte tiene muchos cortes
     Suertes.hasMany(models.Cortes, { as:'listcortes', foreignKey:'suerte_id', onDelete: 'CASCADE' } )
-<<<<<<< HEAD
-=======
-    // suerte tiene muchos tablones
-    Suertes.hasMany(models.Tablones, { as: 'listTablones', foreignKey: 'suerte_id', onDelete: 'CASCADE' })
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
   };
   return Suertes;
 };

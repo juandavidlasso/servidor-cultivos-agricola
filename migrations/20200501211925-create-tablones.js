@@ -16,11 +16,7 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false
       },
-<<<<<<< HEAD
       corte_id: {
-=======
-      suerte_id: {
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
         type: Sequelize.INTEGER,
         allowNull: false
       }
