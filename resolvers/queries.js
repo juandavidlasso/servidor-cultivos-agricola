@@ -1,0 +1,613 @@
+<<<<<<< HEAD
+const { group } = require('console')
+=======
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+const Sequelize = require('sequelize')
+const Op = Sequelize.Op
+const { QueryTypes, where } = require('sequelize')
+
+module.exports= {
+  obtenerUsuario: async (parent, {}, ctx, info) => {
+    // console.log(ctx.me.usuario);
+    
+    return await ctx.me.usuario
+    // if(!usuarioActual) {
+    //   return null
+    // }
+    //console.log(usuarioActual)
+
+    // obtener email actual del request del JWT
+    //const email = db.Usuarios.findOne({ where: {email: usuarioActual.email}, attributes: ['email'] })
+
+    //return email
+  },
+  // Listado de suertes
+  obtenerSuertesRenovadas: async (parent, args, {db}, info) => {
+    try {
+      //return db.Suertes.findAll({where:{renovada:'SI'}, order:[ ['nombre', 'ASC'] + 0,['nombre', 'ASC'] ]}); 
+      return db.sequelize.query(`select id_suerte, nombre, area, variedad, zona, renovada, createdAt, updatedAt from suertes where renovada='SI' order by nombre + 0, nombre`, { type: QueryTypes.SELECT}); 
+    } catch (error) {
+      return null
+    }
+  },
+  // Cortes renovados por cada suerte
+  obtenerCortesRenovados: async (parent, {nombre}, {db}, info) => {
+    try {
+      return db.Cortes.findAll({
+        include:[{
+          model:db.Suertes,
+          as:'suertePadre',
+          required: true,
+          where:{
+              nombre: nombre
+          }}]        
+      }); 
+    } catch (error) {
+      return null
+    }
+  },
+  // obtenerSuertes: async (parent, args, {db}, info) => {
+  //   try {
+  //     return await db.Suertes.findAll()
+  //   } catch (error) {
+  //     return null
+  //   } 
+  // },
+  // consulta cada suerte
+  obtenerSuerte: async (parent, {id_suerte}, {db}, info) => {
+    try {
+      return await db.Suertes.findOne({ where: {id_suerte} })
+    } catch (error) {
+      return null     
+    } 
+  },
+  // consulta numero de cortes de cada suerte
+  obtenerCortesPorSuerte: async (parent, {id_suerte}, {db}, info) => {
+    try {
+      return await db.Cortes.count({ where: {suerte_id:id_suerte} })
+    } catch (error) {
+      return null    
+    } 
+  },
+  // consulta cada corte
+  obtenerCorte: async (parent, {id_corte}, {db}, info) => {
+    try {
+      return await db.Cortes.findOne({ where: {id_corte} })
+    } catch (error) {
+      return null    
+    } 
+  },
+  // consulta labores de cada corte
+  obtenerLaborPorCorte: async (parent, {id_corte}, {db}, info) => {
+    try {
+      return await db.Labores.findAll({ where: {corte_id:id_corte} })
+    } catch (error) {
+      return null    
+    }
+  },
+  // consulta cada labor
+  obtenerLabor: async (parent, {id_labor}, {db}, info) => {
+    try {
+      return await db.Labores.findOne({ where: {id_labor} })
+    } catch (error) {
+      return null    
+    }
+  },
+  // consulta aplicaciones herbicidades de cada corte
+  obtenerHerbicidasPorCorte: async (parent, {id_corte}, {db}, info) => {
+    try {
+      return await db.Aplicacion_herbicidas.findAll({ where: {corte_id:id_corte} })
+    } catch (error) {
+      return null   
+    }
+  },
+  // consulta cada aplicacion herbicida
+  obtenerAplicacionHerbicida: async (parent, {id_aphe}, {db}, info) => {
+    try {
+      return await db.Aplicacion_herbicidas.findOne({ where: {id_aphe} })
+    } catch (error) {
+      return null    
+    }
+  },
+  // consulta tratamientos herbicidas por aplicacion herbicida
+  obtenerTherbicidaPorAplicacion: async (parent, {id_aphe}, {db}, info) => {
+    try {
+      return await db.Tratamiento_herbicidas.findAll({ where: {aphe_id:id_aphe} })
+    } catch (error) {
+      return null    
+    }
+  },
+  // consulta cada tratamiento herbicida
+  obtenerTratamientoHerbicida: async (parent, {id_trahe}, {db}, info) => {
+    try {
+      return await db.Tratamiento_herbicidas.findOne({ where: {id_trahe} })
+    } catch (error) {
+      return null    
+    }
+  },
+  // consulta aplicaciones fertilizantes de cada corte
+  obtenerAPFEPorCorte: async (parent, {id_corte}, {db}, info) => {
+    try {
+      return await db.Aplicacion_fertilizantes.findAll({ where: {corte_id:id_corte} })
+    } catch (error) {
+      return null   
+    }
+  },
+  // consulta cada aplicacion fertilizante
+  obtenerAlicacionFertilizante: async (parent, {id_apfe}, {db}, info) => {
+    try {
+      return await db.Aplicacion_fertilizantes.findOne({ where: {id_apfe} })
+    } catch (error) {
+      return null    
+    }
+  },
+  // consulta tratamiento fertilizante de cada aplicacion fertilizante
+  obtenerTRFEPorAplicacion: async (parent, {id_apfe}, {db}, info) => {
+    try {
+      return await db.Tratamiento_fertilizantes.findAll({ where: {apfe_id:id_apfe} })
+    } catch (error) {
+      return null    
+    }
+  },
+  // consulta cada tratamiento fertilizante
+  obtenerTratamientoFertilizante: async (parent, {id_trafe}, {db}, info) => {
+    try {
+      return await db.Tratamiento_fertilizantes.findOne({ where: {id_trafe} })
+    } catch (error) {
+      return null    
+    }
+  },
+  // consulta cosechas de cada corte
+  obtenerCosechaPorCorte: async (root, {id_corte}, {db}, info) => {
+    try {
+      return await db.Cosechas.findAll({ where: {corte_id:id_corte} })
+    } catch (error) {
+      return null    
+    }
+  },
+  // consulta cada cosecha
+  obtenerCosecha: async (parent, {id_cosecha}, {db}, info) => {
+    try {
+      return await db.Cosechas.findOne({ where: {id_cosecha} })
+    } catch (error) {
+      return null     
+    }
+  },
+<<<<<<< HEAD
+  // consulta area de cada suerte sumando el area de los tablones de cada corte
+  obtenerAreaSuerte: async (parent, {id_suerte}, {db}, info) => {
+    try {
+      return await db.Tablones.sum('Tablones.area', {
+        include: [{
+          model: db.Cortes,
+          as: 'cortePapa',
+          required: true,
+          where: {
+            activo: true
+          },
+          attributes: [],
+          include: [{
+            model: db.Suertes,
+            as: 'suertePadre',
+            required: true,
+            where: {
+              id_suerte
+            },
+            attributes: []
+          }]
+        }]
+      })
+=======
+  // consulta area de cada suerte
+  obtenerAreaSuerte: async (parent, {id_suerte}, {db}, info) => {
+    try {
+      return await db.Tablones.sum('area', { where: {suerte_id: id_suerte} })
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+    } catch (error) {
+      return null     
+    }
+  },
+<<<<<<< HEAD
+  // consulta area de cada corte para calcular el tch y tchm
+  obtenerAreaCorte: async (parent, {id_corte}, {db}, info) => {
+    try {
+      return await db.Tablones.sum('Tablones.area', {
+        include: [{
+          model: db.Cortes,
+          as: 'cortePapa',
+          required: true,
+          where: {
+            id_corte
+          },
+          attributes: [],
+        }]
+      })
+    } catch (error) {
+      return null     
+    }
+  },
+  // consulta listado de pluviometros con sus respectivas lluvias
+=======
+  // obtenerAreaPorSuerte: async (parent, {id_suerte}, {db}, info) => {
+  //   try {
+  //     return await db.Tablones.sum('area', { where: {suerte_id: id_suerte} })
+  //   } catch (error) {
+  //     return null     
+  //   }
+  // },
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+  obtenerPluviometrosYLluvias: async (parent, args, {db}, info) => {
+    try {
+      return await db.Pluviometros.findAll({ 
+        include: [{
+          model: db.Lluvias,
+          as: 'listlluvias'
+        }] 
+      })
+    } catch (error) {
+      return null    
+    }
+  },
+<<<<<<< HEAD
+  // consulta listado de tablones de cada corte
+  obtenerTablonesPorCorte: async (parent, {id_corte}, {db}, info) => {
+    try {
+      return await db.Tablones.findAll({ where: {corte_id: id_corte}, order:[['numero','ASC']] })
+=======
+  // obtenerLluviasYPluviometros: async (parent, args, {db}, info) => {
+  //   try {
+  //     return await db.Lluvias.findAll({ 
+  //       include: [{
+  //         model: db.Pluviometros,
+  //         as: 'PluviometroPadre',
+  //         required: true
+  //       }] 
+  //     })
+  //   } catch (error) {
+  //     return null    
+  //   }
+  // },
+  // consulta tablones de cada suerte
+  obtenerTablonesPorSuerte: async (parent, {id_suerte}, {db}, info) => {
+    try {
+      return await db.Tablones.findAll({ where: {suerte_id: id_suerte}, order:[['numero','ASC']] })
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+    } catch (error) {
+      return null   
+    }
+  },
+  // consulta cada tablon
+  obtenerTablon: async (parent, {id_tablon}, {db}, info) => {
+    try {
+      return await db.Tablones.findOne({ where: {id_tablon} })
+    } catch (error) {
+      return null   
+    }
+  },
+<<<<<<< HEAD
+  // consulta cantidad de tablones de cada corte
+  countTablonesPorSuerte: async (parent, {id_suerte}, {db}, info) => {
+    try {
+      return await db.Tablones.count({
+        include: [{
+          model: db.Cortes,
+          as: 'cortePapa',
+          required: true,
+          where: {
+            activo: true
+          },
+          attributes: [],
+          include: [{
+            model: db.Suertes,
+            as: 'suertePadre',
+            required: true,
+            where: {
+              id_suerte
+            },
+            attributes: []
+          }]
+        }]
+      })
+=======
+  countTablonesPorSuerte: async (parent, {id_suerte}, {db}, info) => {
+    try {
+      return await db.Tablones.count({ where: {suerte_id: id_suerte} })
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+    } catch (error) {
+      return null   
+    }
+  },
+  obtenerCorteActual: async (parent, {id_suerte}, {db}, info) => {
+    try {
+      return await db.Cortes.findOne({
+        where: {
+          suerte_id: id_suerte,
+          activo: true
+        }
+      })
+    } catch (error) {
+      return null    
+    }
+  },
+  obtenerTratamientoPlagas: async (parent, args, {db}, info) => {
+    try {
+      return await db.Tratamiento_plagas.findAll()
+    } catch (error) {
+      return null    
+    }
+  },
+  obtenerTratamientoPlaga: async (parent, {id_trapl}, {db}, info) => {
+    try {
+      return await db.Tratamiento_plagas.findOne({ where: {id_trapl} })
+    } catch (error) {
+      return null    
+    }
+  },
+  obtenerAplicacionPlagas: async (parent, {id_corte, id_tablon, id_trapl}, {db}, info) => {
+    try {
+      return await db.Aplicacion_plagas.findOne({
+        where: {
+          corte_id: id_corte,
+          tablon_id: id_tablon, 
+          trapl_id: id_trapl
+        }
+      })
+    } catch (error) {
+      return null     
+    }
+  },
+  obtenerAplicacionPlaga: async (parent, {id_apla}, {db}, info) => {
+    try {
+      return await db.Aplicacion_plagas.findOne({ where: {id_apla}
+      })
+    } catch (error) {
+      return null   
+    }
+  },
+<<<<<<< HEAD
+  // area total de hectareas activas
+  obtenerTotalHtaSuertes: async (parent, args, {db}, info) => {
+    try {
+      return await db.Tablones.sum('Tablones.area', {
+        include: [{
+          model: db.Cortes,
+          as: 'cortePapa',
+          required: true,
+          where: {
+            activo: true
+          },
+          attributes: []
+        }]
+      })
+=======
+  obtenerTotalHtaSuertes: async (parent, args, {db}, info) => {
+    try {
+      return await db.Tablones.sum('area')
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+    } catch (error) {
+      return null   
+    }
+  },
+  consultaProntuario: async (parent, {nombre,inicial,final}, {db}, info) => {
+    try {
+      if(nombre.trim() !== ""){
+        return await db.Suertes.count({
+          where: {
+            [Op.and]: [{nombre},{
+              createdAt:{
+                [Op.between]:[inicial,final]
+              }
+            }]
+          }
+        }).then(count=> {
+          if(count!=0){
+            return db.sequelize.query('select count(*) as conteo from `cosechas` c INNER JOIN `cortes` o ON o.id_corte=c.corte_id INNER JOIN `suertes` s ON s.id_suerte=o.suerte_id where s.nombre=:nombr and s.createdAt BETWEEN :inicia AND :fina', {
+              replacements: {
+                nombr:nombre, 
+                inicia:inicial, 
+                fina:final
+              },
+              type: QueryTypes.SELECT
+            }).then( cuente => {
+                if(cuente[0].conteo!=0){
+                  return db.Cosechas.findAll({        
+                    include:[{
+                      model:db.Cortes,
+                      as:'cortePadre',
+                      required: true,
+<<<<<<< HEAD
+                      raw: true,
+                      attributes: {
+                        include: [[
+                          db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte)`,),'area'
+                        ]]
+                      },
+=======
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+                      include:[{
+                        model: db.Suertes,
+                        as:'suertePadre',
+                        required: true,
+                        where: {
+                          [Op.and]: [{nombre},{
+                            createdAt:{
+                              [Op.between]:[inicial,final]
+                            }
+                          }],          
+<<<<<<< HEAD
+=======
+                        },
+                        raw: true,
+                        attributes: {
+                          include: [[
+                            db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id=id_suerte)`,),'area'
+                          ]]
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+                        }
+                      }]  
+                    }]
+                  })
+                }
+              })
+          }})
+      } else {
+        return db.Cosechas.findAll({
+          include:[{
+            model:db.Cortes,
+            as:'cortePadre',
+            required: true,
+<<<<<<< HEAD
+            raw: true,
+            attributes: {
+              include: [[
+                db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte)`,),'area'
+              ]]
+            },
+=======
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+            include:[{
+              model: db.Suertes,
+              as:'suertePadre',
+              required: true,
+              where: {
+                createdAt:{
+                  [Op.between]:[inicial,final]
+                }          
+<<<<<<< HEAD
+=======
+              },
+              raw: true,
+              attributes: {
+                include: [[
+                  db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id=id_suerte)`,),'area'
+                ]]
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+              }
+            }]          
+          }]
+        });                        
+      }
+    } catch (error) {
+      return null    
+    }
+  },
+  obtenerEmail: async (parent, {email}, {db}, info) => {
+    try {
+      return await db.Usuarios.findOne({ where: {email} })
+    } catch (error) {
+      return null   
+    }
+<<<<<<< HEAD
+  },
+  // obtenerSuertesRenovadasActuales: async (parent, args, {db}, info) => {
+  //   try {
+  //     return db.Suertes.findAll({
+  //       where: {
+  //         renovada: 'SI'
+  //       },
+  //       order: [['nombre', 'ASC']],
+  //       attributes: {
+  //         include: [[
+  //           db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id=id_suerte)`,),'area'
+  //         ]]
+  //       },
+  //       include: [{
+  //         model: db.Cortes,
+  //         as: 'listcortes',
+  //         required: false,
+  //         where: {
+  //           activo: true
+  //         }
+  //       }]
+  //     })
+  //   } catch (error) {
+  //     return null
+  //   }
+  // },
+  // obtenerDatosActuales: async (parent, args, {db}, info) => {
+  //   try {
+  //     return await db.Cortes.findAll({
+  //       where: {
+  //         fecha_corte: [
+  //           db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
+  //         ]
+  //       },
+  //       group:['suerte_id','suertePadre.nombre'],
+  //       include:[{
+  //         model: db.Suertes,
+  //         as: 'suertePadre',
+  //         required:true,
+  //         attributes:[
+  //           [
+  //             db.sequelize.literal(`(SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre)`,),'id_suerte'
+  //           ],
+  //           [
+  //             db.sequelize.literal(`(SELECT variedad FROM Suertes as Suertecita WHERE Suertecita.id_suerte IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'variedad'
+  //           ], 
+  //           [
+  //             db.sequelize.literal(`(SELECT fecha_inicio FROM Cortes as Corteactual WHERE Corteactual.activo=true AND Corteactual.suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'zona'
+  //           ],
+  //           [
+  //             db.sequelize.literal(`(SELECT numero FROM Cortes as Corteactual WHERE Corteactual.activo=true AND Corteactual.suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'renovada'
+  //           ],
+  //           [
+  //             db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id=id_suerte)`,),'createdAt'
+  //           ],
+  //           [
+  //             db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'area' 
+  //           ],
+  //           'nombre',          
+  //         ],
+  //         where:{
+  //           id_suerte: [
+  //             db.sequelize.literal(`(select max(id_suerte) from cortes c INNER JOIN suertes s ON s.id_suerte=c.suerte_id WHERE c.fecha_corte IN (select max(fecha_corte) from cortes group by suerte_id) group by s.nombre)`)
+  //           ]
+  //         },
+  //       },
+  //       {
+  //         model: db.Cosechas,
+  //         as: 'listcosechas',
+  //         required:true,
+  //       }]
+  //     })
+  //   } catch(error) {
+  //     return null
+  //   }
+  // }
+=======
+  }
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
+}
+
+// return await db.Suertes.findOne({
+//   WHERE: {nombre},
+//   include: [{ all: true, nested: true }]
+// })
+<<<<<<< HEAD
+
+
+      // return await db.Cosechas.findAll({
+      //   include: [{
+      //     model: db.Cortes,
+      //     as: 'cortePadre',
+      //     required: true,
+      //     where: {
+      //       fecha_corte: [
+      //         db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM cortes GROUP BY suerte_id)`)
+      //       ]
+      //     },
+      //     group: ['suerte_id'],
+      //     include: [{
+      //       model: db.Suertes,
+      //       as: 'suertePadre',
+      //       required: true,
+      //       include: [{
+      //         model: db.Tablones,
+      //         as: 'listTablones',
+      //         required: true
+      //       }]
+      //     }]
+      //   }]
+      // })
+=======
+>>>>>>> e647131971aeb667a205d688b46ac6103896c168
