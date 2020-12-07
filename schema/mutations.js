@@ -6,11 +6,7 @@ module.exports= `
     autenticarUsuario(input: AutenticarInput) : Token
     agregarSuerte(input: SuerteInput) : Suerte
     agregarSuerteRenovada(suerte: SuerteInput): Suerte
-<<<<<<< HEAD
     agregarTablon(input: TablonInput, id_corte: Int) : Tablon
-=======
-    agregarTablon(input: TablonInput, id_suerte: Int) : Tablon
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
     agregarCorte(input: CorteInput) : Corte
     actualizarCorte(id_corte: Int, input: CorteInput) : Corte
     agregarLabor(input: LaboresInput) : Labores

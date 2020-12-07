@@ -116,20 +116,12 @@ module.exports= {
       return null
     }  
   },
-<<<<<<< HEAD
   agregarTablon: async (parent, {input, id_corte}, {db}, info) => {
-=======
-  agregarTablon: async (parent, {input, id_suerte}, {db}, info) => {
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
     // revisar si hay tablon repetido
     const existeTablon = await db.Tablones.findOne({
       where: {
         numero: input.numero,
-<<<<<<< HEAD
         corte_id: id_corte
-=======
-        suerte_id: id_suerte
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
       }
     })
 

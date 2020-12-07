@@ -36,13 +36,8 @@ module.exports=`
     variedad: String
     zona: String
     renovada: String
-<<<<<<< HEAD
     createdAt: String
     listcortes: [Corte]
-=======
-    listcortes: [Corte]
-    listTablones: [Tablon]
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
   }
 
   input SuerteInput {
@@ -57,24 +52,15 @@ module.exports=`
     id_tablon: Int
     numero: Int
     area: Float
-<<<<<<< HEAD
     corte_id: Int
     cortePapa: Corte
-=======
-    suerte_id: Int
-    suertePapa: Suerte
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
   }
 
   input TablonInput {
     id_tablon: Int
     numero: Int!
     area: Float!
-<<<<<<< HEAD
     corte_id: Int!
-=======
-    suerte_id: Int!
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
   }
 
   type Corte {
@@ -84,17 +70,11 @@ module.exports=`
     fecha_inicio: String
     fecha_corte: String
     activo: Boolean
-<<<<<<< HEAD
     area: Float
     suerte_id: Int
     estado: Boolean
     listcosechas: [Cosecha]
     listTablones: [Tablon]
-=======
-    suerte_id: Int
-    estado: Boolean
-    listcosechas: [Cosecha]
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
     suertePadre: Suerte
   }
 

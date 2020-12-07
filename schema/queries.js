@@ -16,15 +16,10 @@ module.exports= `
     obtenerCosechaPorCorte(id_corte: Int) : [Cosecha]
     obtenerCosecha(id_cosecha: Int) : Cosecha
     obtenerAreaSuerte(id_suerte: Int) : Float
-<<<<<<< HEAD
     obtenerAreaCorte(id_corte: Int) : Float
     obtenerPluviometrosYLluvias: [Pluviometro]
     obtenerTablonesPorCorte(id_corte: Int) : [Tablon]
     obtenerTablon(id_tablon: Int) : Tablon
-=======
-    obtenerPluviometrosYLluvias: [Pluviometro]
-    obtenerTablonesPorSuerte(id_suerte: Int) : [Tablon]
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
     countTablonesPorSuerte(id_suerte: Int) : Int
     obtenerCorteActual(id_suerte: Int) : Corte
     obtenerTratamientoPlagas: [TratamientoPlaga]
@@ -37,14 +32,8 @@ module.exports= `
     obtenerTratamientoHerbicida(id_trahe: Int) : TratamientoHerbicidas
     obtenerAlicacionFertilizante(id_apfe: Int) : AplicacionFertilizantes
     obtenerTratamientoFertilizante(id_trafe: Int) : TratamientoFertilizantes
-<<<<<<< HEAD
     obtenerTratamientoPlaga(id_trapl: Int): TratamientoPlaga
     obtenerAplicacionPlaga(id_apla: Int) : AplicacionPlaga
     
-=======
-    obtenerTablon(id_tablon: Int) : Tablon
-    obtenerTratamientoPlaga(id_trapl: Int): TratamientoPlaga
-    obtenerAplicacionPlaga(id_apla: Int) : AplicacionPlaga
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
   }
 `

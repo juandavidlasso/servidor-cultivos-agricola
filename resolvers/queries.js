@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-const { group } = require('console')
-=======
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
 const { QueryTypes, where } = require('sequelize')
@@ -173,7 +169,6 @@ module.exports= {
       return null     
     }
   },
-<<<<<<< HEAD
   // consulta area de cada suerte sumando el area de los tablones de cada corte
   obtenerAreaSuerte: async (parent, {id_suerte}, {db}, info) => {
     try {
@@ -197,17 +192,10 @@ module.exports= {
           }]
         }]
       })
-=======
-  // consulta area de cada suerte
-  obtenerAreaSuerte: async (parent, {id_suerte}, {db}, info) => {
-    try {
-      return await db.Tablones.sum('area', { where: {suerte_id: id_suerte} })
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
     } catch (error) {
       return null     
     }
   },
-<<<<<<< HEAD
   // consulta area de cada corte para calcular el tch y tchm
   obtenerAreaCorte: async (parent, {id_corte}, {db}, info) => {
     try {
@@ -227,15 +215,6 @@ module.exports= {
     }
   },
   // consulta listado de pluviometros con sus respectivas lluvias
-=======
-  // obtenerAreaPorSuerte: async (parent, {id_suerte}, {db}, info) => {
-  //   try {
-  //     return await db.Tablones.sum('area', { where: {suerte_id: id_suerte} })
-  //   } catch (error) {
-  //     return null     
-  //   }
-  // },
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
   obtenerPluviometrosYLluvias: async (parent, args, {db}, info) => {
     try {
       return await db.Pluviometros.findAll({ 
@@ -248,30 +227,10 @@ module.exports= {
       return null    
     }
   },
-<<<<<<< HEAD
   // consulta listado de tablones de cada corte
   obtenerTablonesPorCorte: async (parent, {id_corte}, {db}, info) => {
     try {
       return await db.Tablones.findAll({ where: {corte_id: id_corte}, order:[['numero','ASC']] })
-=======
-  // obtenerLluviasYPluviometros: async (parent, args, {db}, info) => {
-  //   try {
-  //     return await db.Lluvias.findAll({ 
-  //       include: [{
-  //         model: db.Pluviometros,
-  //         as: 'PluviometroPadre',
-  //         required: true
-  //       }] 
-  //     })
-  //   } catch (error) {
-  //     return null    
-  //   }
-  // },
-  // consulta tablones de cada suerte
-  obtenerTablonesPorSuerte: async (parent, {id_suerte}, {db}, info) => {
-    try {
-      return await db.Tablones.findAll({ where: {suerte_id: id_suerte}, order:[['numero','ASC']] })
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
     } catch (error) {
       return null   
     }
@@ -284,7 +243,6 @@ module.exports= {
       return null   
     }
   },
-<<<<<<< HEAD
   // consulta cantidad de tablones de cada corte
   countTablonesPorSuerte: async (parent, {id_suerte}, {db}, info) => {
     try {
@@ -308,11 +266,6 @@ module.exports= {
           }]
         }]
       })
-=======
-  countTablonesPorSuerte: async (parent, {id_suerte}, {db}, info) => {
-    try {
-      return await db.Tablones.count({ where: {suerte_id: id_suerte} })
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
     } catch (error) {
       return null   
     }
@@ -364,7 +317,6 @@ module.exports= {
       return null   
     }
   },
-<<<<<<< HEAD
   // area total de hectareas activas
   obtenerTotalHtaSuertes: async (parent, args, {db}, info) => {
     try {
@@ -379,11 +331,6 @@ module.exports= {
           attributes: []
         }]
       })
-=======
-  obtenerTotalHtaSuertes: async (parent, args, {db}, info) => {
-    try {
-      return await db.Tablones.sum('area')
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
     } catch (error) {
       return null   
     }
@@ -415,15 +362,12 @@ module.exports= {
                       model:db.Cortes,
                       as:'cortePadre',
                       required: true,
-<<<<<<< HEAD
                       raw: true,
                       attributes: {
                         include: [[
                           db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte)`,),'area'
                         ]]
                       },
-=======
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
                       include:[{
                         model: db.Suertes,
                         as:'suertePadre',
@@ -434,15 +378,6 @@ module.exports= {
                               [Op.between]:[inicial,final]
                             }
                           }],          
-<<<<<<< HEAD
-=======
-                        },
-                        raw: true,
-                        attributes: {
-                          include: [[
-                            db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id=id_suerte)`,),'area'
-                          ]]
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
                         }
                       }]  
                     }]
@@ -456,15 +391,12 @@ module.exports= {
             model:db.Cortes,
             as:'cortePadre',
             required: true,
-<<<<<<< HEAD
             raw: true,
             attributes: {
               include: [[
                 db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte)`,),'area'
               ]]
             },
-=======
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
             include:[{
               model: db.Suertes,
               as:'suertePadre',
@@ -473,15 +405,6 @@ module.exports= {
                 createdAt:{
                   [Op.between]:[inicial,final]
                 }          
-<<<<<<< HEAD
-=======
-              },
-              raw: true,
-              attributes: {
-                include: [[
-                  db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id=id_suerte)`,),'area'
-                ]]
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
               }
             }]          
           }]
@@ -497,7 +420,6 @@ module.exports= {
     } catch (error) {
       return null   
     }
-<<<<<<< HEAD
   },
   // obtenerSuertesRenovadasActuales: async (parent, args, {db}, info) => {
   //   try {
@@ -574,16 +496,12 @@ module.exports= {
   //     return null
   //   }
   // }
-=======
-  }
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
 }
 
 // return await db.Suertes.findOne({
 //   WHERE: {nombre},
 //   include: [{ all: true, nested: true }]
 // })
-<<<<<<< HEAD
 
 
       // return await db.Cosechas.findAll({
@@ -609,5 +527,3 @@ module.exports= {
       //     }]
       //   }]
       // })
-=======
->>>>>>> e647131971aeb667a205d688b46ac6103896c168
