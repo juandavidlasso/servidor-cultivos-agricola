@@ -421,6 +421,30 @@ module.exports= {
       return null   
     }
   },
+  // Listado de suertes y corte para el modal transferir informacion
+  obtenerSuertesRenovadasYCortes: async (parent, args, {db}, info) => {
+    try {
+      return db.Suertes.findAll({
+        where:{
+          renovada:'SI'
+        },
+        include: [{
+          model: db.Cortes,
+          as: 'listcortes',
+          required: true
+        }]
+      }); 
+      // return db.sequelize.query(`select id_suerte, nombre, area, variedad, zona, renovada, createdAt, updatedAt from suertes where renovada='SI' order by nombre + 0, nombre`, { type: QueryTypes.SELECT}, {
+      //   include: [{
+      //     model: db.Cortes,
+      //     as: 'listcortes',
+      //     required: true
+      //   }]
+      // }); 
+    } catch (error) {
+      return null
+    }
+  },
   // obtenerSuertesRenovadasActuales: async (parent, args, {db}, info) => {
   //   try {
   //     return db.Suertes.findAll({
