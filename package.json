@@ -1,7 +1,7 @@
 {
   "name": "servidor",
   "version": "1.0.0",
-  "description": "",
+  "description": "Aplicacion de Agricola",
   "main": "server.js",
   "engines": {
     "node": "14.x",
