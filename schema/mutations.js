@@ -37,5 +37,6 @@ module.exports= `
     terminarCorte(id_corte: Int, input: CorteInput) : Corte
     borrarSuerte(id_suerte:Int!) : Response
     eliminarTablon(id_tablon: Int) : Response
+    eliminarLabor(id_labor: Int) : Response
   }
 `

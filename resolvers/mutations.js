@@ -71,7 +71,7 @@ module.exports= {
   },
   agregarSuerteRenovada: async (parent, {suerte}, {db}, info) => {
     try {
-      return  db.Suertes.count({
+      return await db.Suertes.count({
         where: {
           nombre: suerte.nombre
         }
@@ -536,5 +536,17 @@ module.exports= {
     } catch (error) {
       return null
     }
-  } 
+  },
+  eliminarLabor: async (parent, {id_labor}, {db}, info) => {
+    // busco si existe la labor
+    const silabor = await db.Labores.findOne({ where: id_labor })
+
+    if(!silabor) throw new Error('No existe')
+
+    try {
+      return await silabor.destroy()
+    } catch (error) {
+      return null
+    }
+  }
 }

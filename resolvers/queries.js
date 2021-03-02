@@ -21,7 +21,7 @@ module.exports= {
   obtenerSuertesRenovadas: async (parent, args, {db}, info) => {
     try {
       //return db.Suertes.findAll({where:{renovada:'SI'}, order:[ ['nombre', 'ASC'] + 0,['nombre', 'ASC'] ]}); 
-      return db.sequelize.query(`select id_suerte, nombre, area, variedad, zona, renovada, createdAt, updatedAt from suertes where renovada='SI' order by nombre + 0, nombre`, { type: QueryTypes.SELECT}); 
+      return await db.sequelize.query(`select id_suerte, nombre, area, variedad, zona, renovada, createdAt, updatedAt from suertes where renovada='SI' order by nombre + 0, nombre`, { type: QueryTypes.SELECT}); 
     } catch (error) {
       return null
     }
@@ -29,7 +29,7 @@ module.exports= {
   // Cortes renovados por cada suerte
   obtenerCortesRenovados: async (parent, {nombre}, {db}, info) => {
     try {
-      return db.Cortes.findAll({
+      return await db.Cortes.findAll({
         include:[{
           model:db.Suertes,
           as:'suertePadre',
@@ -424,7 +424,7 @@ module.exports= {
   // Listado de suertes y corte para el modal transferir informacion
   obtenerSuertesRenovadasYCortes: async (parent, args, {db}, info) => {
     try {
-      return db.Suertes.findAll({
+      return await db.Suertes.findAll({
         where:{
           renovada:'SI'
         },
@@ -441,7 +441,7 @@ module.exports= {
   // obtener suertes renovadas con listado de cortes y tablones para modal
   obtenerSuerteRenovadaCorteTablon: async (parent, args, {db}, info) => {
     try {
-      return db.Suertes.findAll({
+      return await db.Suertes.findAll({
         where:{
           renovada:'SI'
         },
