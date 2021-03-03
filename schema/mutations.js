@@ -38,5 +38,6 @@ module.exports= `
     borrarSuerte(id_suerte:Int!) : Response
     eliminarTablon(id_tablon: Int) : Response
     eliminarLabor(id_labor: Int) : Response
+    eliminarTrahe(id_trahe: Int) : Response
   }
 `

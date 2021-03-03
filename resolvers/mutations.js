@@ -537,6 +537,7 @@ module.exports= {
       return null
     }
   },
+  // Eliminar labor
   eliminarLabor: async (parent, {id_labor}, {db}, info) => {
     // busco si existe la labor
     const silabor = await db.Labores.findOne({ where: id_labor })
@@ -545,6 +546,19 @@ module.exports= {
 
     try {
       return await silabor.destroy()
+    } catch (error) {
+      return null
+    }
+  },
+  // Eliminar tratamiento herbicida
+  eliminarTrahe: async (parent, {id_trahe}, {db}, info) => {
+    // busco si existe la labor
+    const sitrahe = await db.Tratamiento_herbicidas.findOne({ where: id_trahe })
+
+    if(!sitrahe) throw new Error('No existe')
+
+    try {
+      return await sitrahe.destroy()
     } catch (error) {
       return null
     }
