@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
   }, { timestamps: false });
   Tratamiento_fertilizantes.associate = function(models) {
     // tratamiento fertilizantes pertenece a una aplicacion fertilizante
-    Tratamiento_fertilizantes.belongsTo(models.Aplicacion_fertilizantes, { foreignKey: 'apfe_id' ,onDelete: 'CASCADE'})
+    Tratamiento_fertilizantes.belongsTo(models.Aplicacion_fertilizantes, { foreignKey: 'apfe_id' , onDelete: 'CASCADE'})
   };
   return Tratamiento_fertilizantes;
 };

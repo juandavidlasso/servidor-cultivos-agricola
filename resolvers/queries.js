@@ -217,11 +217,15 @@ module.exports= {
   // consulta listado de pluviometros con sus respectivas lluvias
   obtenerPluviometrosYLluvias: async (parent, args, {db}, info) => {
     try {
-      return await db.Pluviometros.findAll({ 
+      return await db.Pluviometros.findAll({
         include: [{
           model: db.Lluvias,
-          as: 'listlluvias'
-        }] 
+          as: 'listlluvias',
+          required: true
+        }],
+        order: [
+          [ {model: db.Lluvias, as: 'listlluvias'}, 'fecha', 'ASC' ]
+        ]
       })
     } catch (error) {
       return null    

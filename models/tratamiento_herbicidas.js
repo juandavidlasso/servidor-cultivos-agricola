@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
   }, { timestamps: false });
   Tratamiento_herbicidas.associate = function(models) {
     // tratamiento herbicidas pertenece a una aplicacion herbicidas
-    Tratamiento_herbicidas.belongsTo(models.Aplicacion_herbicidas, { foreignKey: 'aphe_id',onDelete: 'CASCADE' } )
+    Tratamiento_herbicidas.belongsTo(models.Aplicacion_herbicidas, { foreignKey: 'aphe_id', onDelete: 'CASCADE' } )
   };
   return Tratamiento_herbicidas;
 };

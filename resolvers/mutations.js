@@ -550,6 +550,19 @@ module.exports= {
       return null
     }
   },
+  // Eliminar aplicacion herbicida
+  eliminarAphe: async (parent, {id_aphe}, {db}, info) => {
+    // busco si existe la labor
+    const siaphe = await db.Aplicacion_herbicidas.findOne({ where: id_aphe })
+
+    if(!siaphe) throw new Error('No existe')
+
+    try {
+      return await siaphe.destroy()
+    } catch (error) {
+      return null
+    }
+  },
   // Eliminar tratamiento herbicida
   eliminarTrahe: async (parent, {id_trahe}, {db}, info) => {
     // busco si existe la labor
@@ -559,6 +572,32 @@ module.exports= {
 
     try {
       return await sitrahe.destroy()
+    } catch (error) {
+      return null
+    }
+  },
+  // Eliminar aplicacion fertilizante
+  eliminarApfe: async (parent, {id_apfe}, {db}, info) => {
+    // busco si existe la labor
+    const siapfe = await db.Aplicacion_fertilizantes.findOne({ where: id_apfe })
+
+    if(!siapfe) throw new Error('No existe')
+
+    try {
+      return await siapfe.destroy()
+    } catch (error) {
+      return null
+    }
+  },
+  // Eliminar tratamiento herbicida
+  eliminarTrafe: async (parent, {id_trafe}, {db}, info) => {
+    // busco si existe la labor
+    const sitrafe = await db.Tratamiento_fertilizantes.findOne({ where: id_trafe })
+
+    if(!sitrafe) throw new Error('No existe')
+
+    try {
+      return await sitrafe.destroy()
     } catch (error) {
       return null
     }
