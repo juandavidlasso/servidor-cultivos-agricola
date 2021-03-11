@@ -601,5 +601,18 @@ module.exports= {
     } catch (error) {
       return null
     }
+  },
+  // Eliminar aplicacion plaga
+  eliminarApla: async (parent, {id_apla}, {db}, info) => {
+    // busco si existe la labor
+    const siapla = await db.Aplicacion_plagas.findOne({ where: id_apla })
+
+    if(!siapla) throw new Error('No existe')
+
+    try {
+      return await siapla.destroy()
+    } catch (error) {
+      return null
+    }
   }
 }

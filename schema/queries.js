@@ -36,5 +36,6 @@ module.exports= `
     obtenerAplicacionPlaga(id_apla: Int) : AplicacionPlaga
     obtenerSuertesRenovadasYCortes: [Suerte]
     obtenerSuerteRenovadaCorteTablon: [Suerte]
+    obtenerSuerteCorteTablon: [Suerte]
   }
 `

@@ -429,7 +429,7 @@ module.exports= {
   obtenerSuertesRenovadasYCortes: async (parent, args, {db}, info) => {
     try {
       return await db.Suertes.findAll({
-        where:{
+        where: {
           renovada:'SI'
         },
         include: [{
@@ -446,7 +446,7 @@ module.exports= {
   obtenerSuerteRenovadaCorteTablon: async (parent, args, {db}, info) => {
     try {
       return await db.Suertes.findAll({
-        where:{
+        where: {
           renovada:'SI'
         },
         include: [{
@@ -460,6 +460,29 @@ module.exports= {
           }]
         }]
       }); 
+    } catch (error) {
+      return null
+    }
+  },
+  // Suerte corte y tablon para modal de plagas
+  obtenerSuerteCorteTablon: async (parent, args, {db}, info) => {
+    try {
+      return await db.Suertes.findAll({
+        order: [['nombre', 'ASC']],
+        where: {
+          renovada:'SI'
+        },
+        include: [{
+          model: db.Cortes,
+          as: 'listcortes',
+          required: true,
+          include: [{
+            model: db.Tablones,
+            as: 'listTablones',
+            required: true
+          }]
+        }]
+      })
     } catch (error) {
       return null
     }

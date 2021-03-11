@@ -42,5 +42,6 @@ module.exports= `
     eliminarTrahe(id_trahe: Int) : Response
     eliminarApfe(id_apfe: Int) : Response
     eliminarTrafe(id_trafe: Int) : Response
+    eliminarApla(id_apla: Int) : Response
   }
 `
