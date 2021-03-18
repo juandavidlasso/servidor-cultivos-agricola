@@ -468,7 +468,9 @@ module.exports= {
   obtenerSuerteCorteTablon: async (parent, args, {db}, info) => {
     try {
       return await db.Suertes.findAll({
-        order: [['nombre', 'ASC']],
+        order: [
+          [db.sequelize.literal(`nombre + 0, nombre`)]
+        ],
         where: {
           renovada:'SI'
         },
@@ -482,6 +484,43 @@ module.exports= {
             required: true
           }]
         }]
+      })
+    } catch (error) {
+      return null
+    }
+  },
+  // Listado de pluviometros
+  obtenerPluviometros: async (parent, args, {db}, info) => {
+    try {
+      return await db.Pluviometros.findAll({ order: [['nombre', 'ASC']] })
+    } catch (error) {
+      return null
+    }
+  },
+  // Listado lluvias por mes y año
+  obtenerLluvias: async (parent, {fechanueva, id_pluviometro}, {db}, info) => {
+    try {
+      return await db.sequelize.query(`SELECT id_lluvia, cantidad, fecha FROM lluvias WHERE date_format(fecha, '%Y-%m') = :fechita AND pluviometro_id=:pluviometroid order by fecha ASC;`, {
+        replacements: {
+          fechita:fechanueva,
+          pluviometroid:id_pluviometro
+        },
+        type: QueryTypes.SELECT
+      })
+      // return await db.sequelize.query(`SELECT id_lluvia, cantidad, fecha FROM lluvias WHERE date_format(fecha, '%Y-%m') = ${fechita} AND pluviometro_id=${id_pluviometro};`, { type: QueryTypes.SELECT})
+    } catch (error) {
+      return null
+    }
+  },
+  // Listado lluvias por año
+  obtenerLluviasAno: async (parent, {anofecha, id_pluviometro}, {db}, info) => {
+    try {
+      return await db.sequelize.query(`SELECT id_lluvia, SUM(cantidad) AS cantidad, date_format(fecha, '%M') AS fecha FROM lluvias WHERE date_format(fecha, '%Y') = :fechayear AND pluviometro_id=:pluviometroid GROUP BY date_format(fecha, '%m')`, {
+        replacements: {
+          fechayear:anofecha,
+          pluviometroid:id_pluviometro
+        },
+        type: QueryTypes.SELECT
       })
     } catch (error) {
       return null

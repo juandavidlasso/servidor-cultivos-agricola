@@ -37,5 +37,8 @@ module.exports= `
     obtenerSuertesRenovadasYCortes: [Suerte]
     obtenerSuerteRenovadaCorteTablon: [Suerte]
     obtenerSuerteCorteTablon: [Suerte]
+    obtenerPluviometros: [Pluviometro]
+    obtenerLluvias(fechanueva: String, id_pluviometro: Int): [Lluvia]
+    obtenerLluviasAno(anofecha: String, id_pluviometro: Int): [Lluvia]
   }
 `
