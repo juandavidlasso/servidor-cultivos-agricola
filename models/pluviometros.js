@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
     nombre: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    suertesAsociadas: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
   }, { timestamps: false });
   Pluviometros.associate = function(models) {

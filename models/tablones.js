@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.FLOAT,
       allowNull: false
     },
+    estado: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
     corte_id: {
       type: DataTypes.INTEGER,
       allowNull: false
@@ -24,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     Tablones.belongsTo(models.Cortes, { as: 'cortePapa', foreignKey: 'corte_id', onDelete: 'CASCADE' })
     // tablones tiene muchas aplicacion plaga
     Tablones.hasMany(models.Aplicacion_plagas, { foreignKey: 'tablon_id' } )
+    // Tablones tiene muchas aplicaciones riegos
+    Tablones.hasMany(models.Aplicacion_riegos, { foreignKey: 'tablon_id' })
   };
   return Tablones;
 };

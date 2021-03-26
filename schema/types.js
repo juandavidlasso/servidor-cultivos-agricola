@@ -52,6 +52,7 @@ module.exports=`
     id_tablon: Int
     numero: Int
     area: Float
+    estado: Boolean
     corte_id: Int
     cortePapa: Corte
   }
@@ -60,6 +61,7 @@ module.exports=`
     id_tablon: Int
     numero: Int!
     area: Float!
+    estado: Boolean!
     corte_id: Int!
   }
 
@@ -138,6 +140,7 @@ module.exports=`
     aplico: String
     nota: String
     aphe_id: Int
+    aplicacionHPadre: AplicacionHerbicidas
   }
 
   input TratamientoHerbicidasInput {
@@ -174,6 +177,7 @@ module.exports=`
     aplico: String
     nota: String
     apfe_id: Int
+    aplicacionFPadre: AplicacionFertilizantes
   }
 
   input TratamientoFertilizantesInput {
@@ -190,12 +194,14 @@ module.exports=`
   type Pluviometro {
     id_pluviometro: Int
     nombre: Int
+    suertesAsociadas: String
     listlluvias: [Lluvia]
   }
 
   input PluviometroInput {
     id_pluviometro: Int
     nombre: Int!
+    suertesAsociadas: String
   }
 
   type Lluvia {
@@ -211,6 +217,32 @@ module.exports=`
     fecha: String!
     cantidad: Float!
     pluviometro_id: Int!
+  }
+
+  type Riego {
+    id_riego: Int,
+    fecha: String,
+    num_riego: Int,
+    corte_id: Int
+  }
+
+  input RiegoInput {
+    id_riego: Int
+    fecha: String!,
+    num_riego: Int!,
+    corte_id: Int!
+  }
+
+  type AplicacionRiego {
+    id_apriego: Int,
+    riego_id: Int,
+    tablon_id: Int
+  }
+
+  input AplicacionRiegoInput {
+    id_apriego: Int,
+    riego_id: Int!,
+    tablon_id: Int!
   }
 
   type Cosecha {

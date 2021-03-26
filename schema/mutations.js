@@ -43,5 +43,7 @@ module.exports= `
     eliminarApfe(id_apfe: Int) : Response
     eliminarTrafe(id_trafe: Int) : Response
     eliminarApla(id_apla: Int) : Response
+    agregarRiego(input: RiegoInput) : Riego
+    agregarAplicacionRiego(input: AplicacionRiegoInput) : AplicacionRiego
   }
 `

@@ -1,24 +1,24 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('Pluviometros', {
-      id_pluviometro: {
+    return queryInterface.createTable('Aplicacion_riegos', {
+      id_apriego: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      nombre: {
+      riego_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      suertesAsociadas: {
-        type: Sequelize.STRING,
-        allowNull: true
+      tablon_id: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Pluviometros');
+    return queryInterface.dropTable('Aplicacion_riegos');
   }
 };

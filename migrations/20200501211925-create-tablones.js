@@ -16,6 +16,10 @@ module.exports = {
         type: Sequelize.FLOAT,
         allowNull: false
       },
+      estado: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false
+      },
       corte_id: {
         type: Sequelize.INTEGER,
         allowNull: false

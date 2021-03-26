@@ -25,11 +25,11 @@ module.exports = (sequelize, DataTypes) => {
   }, { timestamps: false });
   Aplicacion_plagas.associate = function(models) {
     // aplicacion plagas pertenece a un corte
-    Aplicacion_plagas.belongsTo(models.Cortes, { foreignKey: 'corte_id',onDelete: 'CASCADE' } )
+    Aplicacion_plagas.belongsTo(models.Cortes, { foreignKey: 'corte_id', onDelete: 'CASCADE' } )
     // aplicacion plagas pertenece a un tablon
-    Aplicacion_plagas.belongsTo(models.Tablones, { foreignKey: 'tablon_id',onDelete: 'CASCADE' } )
+    Aplicacion_plagas.belongsTo(models.Tablones, { foreignKey: 'tablon_id', onDelete: 'CASCADE' } )
     // aplicacion plagas pertenece a un tratamiento plagas
-    Aplicacion_plagas.belongsTo(models.Tratamiento_plagas, { foreignKey: 'trapl_id',onDelete: 'CASCADE' } )
+    Aplicacion_plagas.belongsTo(models.Tratamiento_plagas, { foreignKey: 'trapl_id', onDelete: 'CASCADE' } )
   };
   return Aplicacion_plagas;
 };

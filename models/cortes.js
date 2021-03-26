@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
   }, { timestamps: false });
   Cortes.associate = function(models) {
     // corte pertenece a una suerte
-    Cortes.belongsTo(models.Suertes, { as: 'suertePadre', foreignKey: 'suerte_id',onDelete: 'CASCADE' })
+    Cortes.belongsTo(models.Suertes, { as: 'suertePadre', foreignKey: 'suerte_id', onDelete: 'CASCADE' })
     // corte tiene muchas aplicaciones plagas
     Cortes.hasMany(models.Aplicacion_plagas, { foreignKey: 'corte_id' })
     // corte tiene muchss aplicaciones fertilizantes
@@ -52,7 +52,8 @@ module.exports = (sequelize, DataTypes) => {
     Cortes.hasMany(models.Aplicacion_herbicidas, { foreignKey: 'corte_id' })
     // corte tiene muchos tablones
     Cortes.hasMany(models.Tablones, { as: 'listTablones', foreignKey: 'corte_id' })
-
+    // corte tiene muchos riegos
+    Cortes.hasMany(models.Riegos, { foreignKey: 'corte_id' })
   };
   return Cortes;
 };

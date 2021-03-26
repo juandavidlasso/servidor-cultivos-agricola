@@ -525,7 +525,91 @@ module.exports= {
     } catch (error) {
       return null
     }
+  },
+  // Listado lluvias actuales
+  obtenerLluviasActuales: async (parent, {id_pluviometro}, {db}, info) => {
+    try {
+      return await db.sequelize.query(`SELECT id_lluvia, fecha, cantidad FROM Lluvias WHERE MONTH(fecha) = MONTH(NOW()) AND pluviometro_id=:id_pluviometro ORDER BY fecha ASC;`, {
+        replacements: {
+          id_pluviometro
+        },
+        type: QueryTypes.SELECT })
+    } catch (error) {
+      return null
+    }
+  },
+  // Valor total Herbicidas
+  obtenerValorTotalHerb: async (parent, {id_aphe}, {db}, info) => {
+    try {
+      return await db.Tratamiento_herbicidas.sum('Tratamiento_herbicidas.valor', {
+        include: [{
+          model: db.Aplicacion_herbicidas,
+          as: 'aplicacionHPadre',
+          required: true,
+          where: {
+            id_aphe
+          }
+        }]
+      })
+    } catch (error) {
+      return null
+    }
+  },
+  // Valor total fertilizantes
+  obtenerValorTotalFerti: async (parent, {id_apfe}, {db}, info) => {
+    try {
+      return await db.Tratamiento_fertilizantes.sum('Tratamiento_fertilizantes.valor', {
+        include: [{
+          model: db.Aplicacion_fertilizantes,
+          as: 'aplicacionFPadre',
+          required: true,
+          where: {
+            id_apfe
+          }
+        }]
+      })
+    } catch (error) {
+      return null
+    }
+  },
+  // Nombre suerte para select
+  obtenerNombreSuertesRenovadas: async (parent, args, {db}, info) => {
+    try {
+      //return db.Suertes.findAll({where:{renovada:'SI'}, order:[ ['nombre', 'ASC'] + 0,['nombre', 'ASC'] ]}); 
+      return await db.sequelize.query(`select id_suerte, nombre from suertes where renovada='SI' order by nombre + 0, nombre`, { type: QueryTypes.SELECT}); 
+    } catch (error) {
+      return null
+    }
+  },
+  // Obtener numero maximo de riego
+  obtenerMaxRiego: async(parent, {id_corte}, {db}, info) => {
+    try {
+      return await db.Riegos.count({
+        where: {
+          corte_id:id_corte
+        }
+      }).then(count => {
+        if(count!=0){
+          return db.Riegos.max('num_riego', { where: {corte_id:id_corte} })
+        } else {
+          return 0
+        }
+      })
+    } catch (error) {
+      return null
+    }
+  },
+  // obtener riegos de cada corte
+  obtenerRiegosCorte: async (parent, {id_corte}, {db}, info) => {
+    try {
+      return await db.Riegos.findAll({ where: { corte_id:id_corte } })
+    } catch (error) {
+      return null
+    }
   }
+  // `SELECT id_lluvia, fecha, cantidad, date_format(fecha, '%M') AS pluviometro_id FROM Lluvias WHERE MONTH(fecha) = MONTH(NOW()) AND pluviometro_id=id_pluviometro ORDER BY fecha ASC;`
+
+
   // obtenerSuertesRenovadasActuales: async (parent, args, {db}, info) => {
   //   try {
   //     return db.Suertes.findAll({

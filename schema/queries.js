@@ -40,5 +40,11 @@ module.exports= `
     obtenerPluviometros: [Pluviometro]
     obtenerLluvias(fechanueva: String, id_pluviometro: Int): [Lluvia]
     obtenerLluviasAno(anofecha: String, id_pluviometro: Int): [Lluvia]
+    obtenerLluviasActuales(id_pluviometro: Int): [Lluvia]
+    obtenerValorTotalHerb(id_aphe: Int): Float
+    obtenerValorTotalFerti(id_apfe: Int): Float
+    obtenerNombreSuertesRenovadas: [Suerte]
+    obtenerMaxRiego(id_corte: Int): Int
+    obtenerRiegosCorte(id_corte: Int) : [Riego]
   }
 `

@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
   }, { timestamps: false });
   Tratamiento_plagas.associate = function(models) {
     // tratamiento plagas tiene muchas aplicacion plagas
-    Tratamiento_plagas.hasMany(models.Aplicacion_plagas, { foreignKey: 'trapl_id',onDelete: 'CASCADE' } )
+    Tratamiento_plagas.hasMany(models.Aplicacion_plagas, { foreignKey: 'trapl_id', onDelete: 'CASCADE' } )
   };
   return Tratamiento_plagas;
 };

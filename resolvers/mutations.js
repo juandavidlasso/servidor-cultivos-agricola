@@ -146,13 +146,13 @@ module.exports= {
   },
   actualizarCorte: async (parent, {id_corte, input}, {db}, info) => {
     // actualizar corte
+    const corte = await db.Cortes.findOne({ where: {id_corte} })
+
+    if(!corte) {
+      throw new Error('No existe')
+    }
+    
     try {
-      const corte = await db.Cortes.findOne({ where: {id_corte} })
-
-      if(!corte) {
-        throw new Error('No existe')
-      }
-
       await corte.update(input, { where:{id_corte} })
       return corte
     } catch (error) {
@@ -611,6 +611,22 @@ module.exports= {
 
     try {
       return await siapla.destroy()
+    } catch (error) {
+      return null
+    }
+  },
+  // Agregar riego con fecha y numero de riego
+  agregarRiego: async (parent, {input}, {db}, info) => {
+    try {
+      return await db.Riegos.create(input)
+    } catch (error) {
+      return null
+    }
+  },
+  // Agregar aplicacion riego a un riego y un tablon id
+  agregarAplicacionRiego: async (parent, {input}, {db}, info) => {
+    try {
+      return await db.Aplicacion_riegos.create(input)
     } catch (error) {
       return null
     }
