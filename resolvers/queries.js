@@ -429,6 +429,9 @@ module.exports= {
   obtenerSuertesRenovadasYCortes: async (parent, args, {db}, info) => {
     try {
       return await db.Suertes.findAll({
+        order: [
+          [db.sequelize.literal(`nombre + 0, nombre`)]
+        ],
         where: {
           renovada:'SI'
         },
