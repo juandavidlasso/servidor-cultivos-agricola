@@ -609,113 +609,84 @@ module.exports= {
     } catch (error) {
       return null
     }
-  }
-  // `SELECT id_lluvia, fecha, cantidad, date_format(fecha, '%M') AS pluviometro_id FROM Lluvias WHERE MONTH(fecha) = MONTH(NOW()) AND pluviometro_id=id_pluviometro ORDER BY fecha ASC;`
-
-
-  // obtenerSuertesRenovadasActuales: async (parent, args, {db}, info) => {
-  //   try {
-  //     return db.Suertes.findAll({
-  //       where: {
-  //         renovada: 'SI'
-  //       },
-  //       order: [['nombre', 'ASC']],
-  //       attributes: {
-  //         include: [[
-  //           db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id=id_suerte)`,),'area'
-  //         ]]
-  //       },
-  //       include: [{
-  //         model: db.Cortes,
-  //         as: 'listcortes',
-  //         required: false,
-  //         where: {
-  //           activo: true
-  //         }
-  //       }]
-  //     })
-  //   } catch (error) {
-  //     return null
-  //   }
-  // },
-  // obtenerDatosActuales: async (parent, args, {db}, info) => {
-  //   try {
-  //     return await db.Cortes.findAll({
-  //       where: {
-  //         fecha_corte: [
-  //           db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
-  //         ]
-  //       },
-  //       group:['suerte_id','suertePadre.nombre'],
-  //       include:[{
-  //         model: db.Suertes,
-  //         as: 'suertePadre',
-  //         required:true,
-  //         attributes:[
-  //           [
-  //             db.sequelize.literal(`(SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre)`,),'id_suerte'
-  //           ],
-  //           [
-  //             db.sequelize.literal(`(SELECT variedad FROM Suertes as Suertecita WHERE Suertecita.id_suerte IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'variedad'
-  //           ], 
-  //           [
-  //             db.sequelize.literal(`(SELECT fecha_inicio FROM Cortes as Corteactual WHERE Corteactual.activo=true AND Corteactual.suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'zona'
-  //           ],
-  //           [
-  //             db.sequelize.literal(`(SELECT numero FROM Cortes as Corteactual WHERE Corteactual.activo=true AND Corteactual.suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'renovada'
-  //           ],
-  //           [
-  //             db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id=id_suerte)`,),'createdAt'
-  //           ],
-  //           [
-  //             db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'area' 
-  //           ],
-  //           'nombre',          
-  //         ],
-  //         where:{
-  //           id_suerte: [
-  //             db.sequelize.literal(`(select max(id_suerte) from cortes c INNER JOIN suertes s ON s.id_suerte=c.suerte_id WHERE c.fecha_corte IN (select max(fecha_corte) from cortes group by suerte_id) group by s.nombre)`)
-  //           ]
-  //         },
-  //       },
-  //       {
-  //         model: db.Cosechas,
-  //         as: 'listcosechas',
-  //         required:true,
-  //       }]
-  //     })
-  //   } catch(error) {
-  //     return null
-  //   }
-  // }
-}
-
-// return await db.Suertes.findOne({
-//   WHERE: {nombre},
-//   include: [{ all: true, nested: true }]
-// })
-
-
-      // return await db.Cosechas.findAll({
-      //   include: [{
-      //     model: db.Cortes,
-      //     as: 'cortePadre',
-      //     required: true,
-      //     where: {
-      //       fecha_corte: [
-      //         db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM cortes GROUP BY suerte_id)`)
+  },
+  obtenerDatosActuales: async (parent, args, {db}, info) => {
+    try {
+      return await db.Suertes.findAll({
+        order: [
+          [db.sequelize.literal(`nombre + 0, nombre`)]
+        ],
+        where: {
+          renovada:'SI'
+        },
+        include: [{
+          model: db.Cortes,
+          as: 'listcortes',
+          required: false,
+          where: {
+            fecha_corte: [
+              db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
+            ]
+          },
+          attributes: [
+            'id_corte','numero','fecha_corte',
+            [ db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte)`,),'area' ],
+            [ db.sequelize.literal(`(SELECT MAX(numero) FROM cortes WHERE suerte_id=id_suerte)`,),'suerte_id' ],
+            [ db.sequelize.literal(`(SELECT MAX(fecha_inicio) FROM cortes WHERE suerte_id=id_suerte)`,),'fecha_inicio' ]
+          ],
+          include: [{
+            model: db.Cosechas,
+            as: 'listcosechas',
+            required: false
+          }]
+        }]
+      })
+      // return await db.Cortes.findAll({
+      //   where: {
+      //     fecha_corte: [
+      //       db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
+      //     ]
+      //   },
+      //   group:['suerte_id','suertePadre.nombre'],
+      //   include:[{
+      //     model: db.Suertes,
+      //     as: 'suertePadre',
+      //     required:true,
+      //     attributes:[
+      //       [
+      //         db.sequelize.literal(`(SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre)`,),'id_suerte'
+      //       ],
+      //       [
+      //         db.sequelize.literal(`(SELECT variedad FROM Suertes as Suertecita WHERE Suertecita.id_suerte IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'variedad'
+      //       ], 
+      //       [
+      //         db.sequelize.literal(`(SELECT fecha_inicio FROM Cortes as Corteactual WHERE Corteactual.activo=true AND Corteactual.suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'zona'
+      //       ],
+      //       [
+      //         db.sequelize.literal(`(SELECT numero FROM Cortes as Corteactual WHERE Corteactual.activo=true AND Corteactual.suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'renovada'
+      //       ],
+      //       [
+      //         db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id=id_suerte)`,),'createdAt'
+      //       ],
+      //       [
+      //         db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'area' 
+      //       ],
+      //       'nombre',          
+      //     ],
+      //     where:{
+      //       id_suerte: [
+      //         db.sequelize.literal(`(select max(suerte_id) from cortes c INNER JOIN suertes s ON s.id_suerte=c.suerte_id WHERE c.fecha_corte IN (select max(fecha_corte) from cortes group by suerte_id) group by s.nombre)`)
       //       ]
       //     },
-      //     group: ['suerte_id'],
-      //     include: [{
-      //       model: db.Suertes,
-      //       as: 'suertePadre',
-      //       required: true,
-      //       include: [{
-      //         model: db.Tablones,
-      //         as: 'listTablones',
-      //         required: true
-      //       }]
-      //     }]
+      //   },
+      //   {
+      //     model: db.Cosechas,
+      //     as: 'listcosechas',
+      //     required:true,
       //   }]
       // })
+    } catch(error) {
+      return null
+    }
+  }
+}
