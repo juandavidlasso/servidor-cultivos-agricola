@@ -361,7 +361,10 @@ module.exports= {
               type: QueryTypes.SELECT
             }).then( cuente => {
                 if(cuente[0].conteo!=0){
-                  return db.Cosechas.findAll({        
+                  return db.Cosechas.findAll({
+                    order: [
+                      [{model: db.Cortes, as: 'cortePadre'}, {model: db.Suertes, as: 'suertePadre'}, db.sequelize.literal('nombre + 0, nombre')]
+                    ],    
                     include:[{
                       model:db.Cortes,
                       as:'cortePadre',
@@ -391,6 +394,9 @@ module.exports= {
           }})
       } else {
         return db.Cosechas.findAll({
+          order: [
+            [{model: db.Cortes, as: 'cortePadre'}, {model: db.Suertes, as: 'suertePadre'}, db.sequelize.literal('nombre + 0, nombre')]
+          ],
           include:[{
             model:db.Cortes,
             as:'cortePadre',
