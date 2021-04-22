@@ -81,14 +81,14 @@ server.applyMiddleware({app})
 //models.sequelize.sync()
 
 // production
-// const PORT = process.env.PORT || 3050
-// app.listen(PORT, () => {
-//   console.log(`Servidor corriendo en puerto${PORT}`);
-// })
+const PORT = process.env.PORT || 3050
+app.listen(PORT, () => {
+  console.log(`Servidor corriendo en puerto${PORT}`);
+})
 
 
 // developmet
-const port = process.env.PORT || 8000;
-app.listen({port: 8000}, () => console.log(`El servidor esta corriendo http://localhost:8000${server.graphqlPath}`))
+// const port = process.env.PORT || 8000;
+// app.listen({port: 8000}, () => console.log(`El servidor esta corriendo http://localhost:8000${server.graphqlPath}`))
 
 module.exports= app;
