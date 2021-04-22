@@ -630,5 +630,17 @@ module.exports= {
     } catch (error) {
       return null
     }
+  },
+  // Eliminar lluvia
+  eliminarLluvia: async (parent, {id_lluvia}, {db}, info) => {
+    // busco si existe la lluvia
+    const silluvia = await db.Lluvias.findOne({ where: id_lluvia })
+
+    if(!silluvia) throw new Error('No existe')
+    try {
+      return await silluvia.destroy()
+    } catch (error) {
+      return null
+    }
   }
 }

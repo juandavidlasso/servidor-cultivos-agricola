@@ -45,5 +45,6 @@ module.exports= `
     eliminarApla(id_apla: Int) : Response
     agregarRiego(input: RiegoInput) : Riego
     agregarAplicacionRiego(input: AplicacionRiegoInput) : AplicacionRiego
+    eliminarLluvia(id_lluvia: Int) : Response
   }
 `

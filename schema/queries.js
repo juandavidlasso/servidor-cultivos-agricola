@@ -46,7 +46,7 @@ module.exports= `
     obtenerNombreSuertesRenovadas: [Suerte]
     obtenerMaxRiego(id_corte: Int): Int
     obtenerRiegosCorte(id_corte: Int) : [Riego]
-    obtenerDatosActuales: [Corte]
+    obtenerDatosActuales(nombres: String): [Corte]
     obtenerResumenPluviometro: [Pluviometro]
   }
 `
