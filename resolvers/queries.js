@@ -751,9 +751,44 @@ module.exports= {
             [Op.and]: [
                 db.sequelize.literal('MONTH(fecha) = MONTH(NOW())')
             ]
-        }
+          }
         }]
       })
+    } catch (error) {
+      return null
+    }
+  },
+  // Resumen por año de pluviometros
+  obtenerResumenAno: async (parent, {year}, {db}, info) => {
+    try {
+      return await db.sequelize.query('SET lc_time_names = "es_CO"').then(async() => {
+        return await db.sequelize.query("SELECT id_lluvia, MONTHNAME(fecha) AS fecha, SUM(cantidad) AS cantidad, pluviometro_id FROM Lluvias WHERE date_format(fecha, '%Y') = :fecano GROUP BY MONTHNAME(fecha), pluviometro_id", {
+          replacements: {
+            fecano: year
+          },
+          type: QueryTypes.SELECT
+        })
+      })
+
+      // return await db.Pluviometros.findAll({
+      //   order: [
+      //     ['nombre', 'ASC']
+      //   ],
+      //   attributes: [
+      //     'id_pluviometro','nombre',
+      //     [ db.sequelize.literal(`(SELECT SUM(cantidad) FROM lluvias WHERE pluviometro_id=id_pluviometro GROUP BY pluviometro_id)`,),'suertesAsociadas' ]
+      //   ],
+      //   group: [ db.sequelize.literal('MONTHNAME(`listlluvias`.`fecha`), pluviometro_id') ],
+      //   include: [{
+      //     model: db.Lluvias,
+      //     as: 'listlluvias',
+      //     required: false,
+      //     attributes: [
+      //       'id_lluvia','fecha','cantidad'
+      //       //[ db.sequelize.literal(`(SELECT SUM(cantidad) FROM lluvias WHERE pluviometro_id=id_pluviometro)`,),'cantidad' ]
+      //     ]
+      //   }]
+      // })
     } catch (error) {
       return null
     }
