@@ -762,7 +762,7 @@ module.exports= {
   obtenerResumenAno: async (parent, {year}, {db}, info) => {
     try {
       return await db.sequelize.query('SET lc_time_names = "es_CO"').then(async() => {
-        return await db.sequelize.query("SELECT id_lluvia, MONTHNAME(fecha) AS fecha, SUM(cantidad) AS cantidad, pluviometro_id FROM Lluvias WHERE date_format(fecha, '%Y') = :fecano GROUP BY MONTHNAME(fecha), pluviometro_id ORDER BY MONTHNAME(fecha)", {
+        return await db.sequelize.query("SELECT id_lluvia, MONTHNAME(fecha) AS fecha, SUM(cantidad) AS cantidad, pluviometro_id FROM Lluvias WHERE date_format(fecha, '%Y') = :fecano GROUP BY MONTHNAME(fecha), pluviometro_id ORDER BY date_format(fecha, '%m')", {
           replacements: {
             fecano: year
           },
