@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     // riegos pertenece a un corte
     Riegos.belongsTo(models.Cortes, { foreignKey: 'corte_id', onDelete: 'CASCADE' })
     // riegos tiene muchas aplicaciones riegos
-    Riegos.hasMany(models.Aplicacion_riegos, { foreignKey: 'riego_id', onDelete: 'CASCADE' })
+    Riegos.hasMany(models.Aplicacion_riegos, { as: 'listRiegos', foreignKey: 'riego_id', onDelete: 'CASCADE' })
   };
   return Riegos;
 };

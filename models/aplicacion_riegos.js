@@ -13,6 +13,10 @@ module.exports = (sequelize, DataTypes) => {
     tablon_id: {
       type: DataTypes.INTEGER,
       allowNull: false
+    },
+    num_tablon: {
+      type: DataTypes.INTEGER,
+      allowNull: false
     }
   }, { timestamps: false });
   Aplicacion_riegos.associate = function(models) {

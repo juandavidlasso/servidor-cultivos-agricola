@@ -624,7 +624,17 @@ module.exports= {
     }
   },
   // Agregar aplicacion riego a un riego y un tablon id
-  agregarAplicacionRiego: async (parent, {input}, {db}, info) => {
+  agregarAplicacionRiego: async (parent, {id_riego, id_tablon, input}, {db}, info) => {
+    // busco si ese tablon ya tiene aplicacion en ese riego
+    const siAplicacionRiego = await db.Aplicacion_riegos.findOne({
+      where: {
+        riego_id: id_riego,
+        tablon_id: id_tablon
+      }
+    })
+
+    if(siAplicacionRiego) throw new Error('El tablón ya tiene aplicación para este riego.')
+
     try {
       return await db.Aplicacion_riegos.create(input)
     } catch (error) {
@@ -639,6 +649,32 @@ module.exports= {
     if(!silluvia) throw new Error('No existe')
     try {
       return await silluvia.destroy()
+    } catch (error) {
+      return null
+    }
+  },
+  // Eliminar Riego
+  eliminarRiego: async (parent, {id_riego}, {db}, info) => {
+    // busco si existe el riego
+    const siriego = await db.Riegos.findOne({ where: id_riego })
+
+    if(!siriego) throw new Error('No existe')
+    try {
+      return await siriego.destroy()
+    } catch (error) {
+      return null
+    }    
+  },
+  // editar fecha de riego
+  actualizarRiego: async (parent, {id_riego, input}, {db}, info) => {
+    // busco si existe el riego
+    const siApRiego = await db.Riegos.findOne({ where: id_riego })
+
+    if(!siApRiego) throw new Error('No existe')
+
+    try {
+      await siApRiego.update(input, { where: {id_riego} })
+      return siApRiego
     } catch (error) {
       return null
     }

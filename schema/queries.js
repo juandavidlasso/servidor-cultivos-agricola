@@ -49,5 +49,7 @@ module.exports= `
     obtenerDatosActuales(nombres: String): [Corte]
     obtenerResumenPluviometro: [Pluviometro]
     obtenerResumenAno(year: Int): [Lluvia]
+    obtenerAplicacionRiegos(id_riego: Int) : [Tablon]
+    obtenerTotalLluviaActualPluviometro(id_pluviometro: Int) : Float
   }
 `

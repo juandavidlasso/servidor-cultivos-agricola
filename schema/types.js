@@ -224,6 +224,7 @@ module.exports=`
     fecha: String,
     num_riego: Int,
     corte_id: Int
+    listRiegos: [AplicacionRiego]
   }
 
   input RiegoInput {
@@ -237,12 +238,14 @@ module.exports=`
     id_apriego: Int,
     riego_id: Int,
     tablon_id: Int
+    num_tablon: Int
   }
 
   input AplicacionRiegoInput {
     id_apriego: Int,
     riego_id: Int!,
     tablon_id: Int!
+    num_tablon: Int!
   }
 
   type Cosecha {

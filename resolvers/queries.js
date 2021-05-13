@@ -613,7 +613,16 @@ module.exports= {
   // obtener riegos de cada corte
   obtenerRiegosCorte: async (parent, {id_corte}, {db}, info) => {
     try {
-      return await db.Riegos.findAll({ where: { corte_id:id_corte } })
+      return await db.Riegos.findAll({
+        order: [
+          [
+            'num_riego','ASC',
+          ]
+        ],
+        where: {
+          corte_id:id_corte
+        }
+      })
     } catch (error) {
       return null
     }
@@ -769,26 +778,47 @@ module.exports= {
           type: QueryTypes.SELECT
         })
       })
-
-      // return await db.Pluviometros.findAll({
-      //   order: [
-      //     ['nombre', 'ASC']
-      //   ],
-      //   attributes: [
-      //     'id_pluviometro','nombre',
-      //     [ db.sequelize.literal(`(SELECT SUM(cantidad) FROM lluvias WHERE pluviometro_id=id_pluviometro GROUP BY pluviometro_id)`,),'suertesAsociadas' ]
-      //   ],
-      //   group: [ db.sequelize.literal('MONTHNAME(`listlluvias`.`fecha`), pluviometro_id') ],
-      //   include: [{
-      //     model: db.Lluvias,
-      //     as: 'listlluvias',
-      //     required: false,
-      //     attributes: [
-      //       'id_lluvia','fecha','cantidad'
-      //       //[ db.sequelize.literal(`(SELECT SUM(cantidad) FROM lluvias WHERE pluviometro_id=id_pluviometro)`,),'cantidad' ]
-      //     ]
-      //   }]
+    } catch (error) {
+      return null
+    }
+  },
+  // Obtener aplicacion riegos de cada riego
+  obtenerAplicacionRiegos: async (parent, {id_riego}, {db}, info) => {
+    try {
+      return await db.sequelize.query('SELECT id_tablon, numero FROM Tablones t INNER JOIN Aplicacion_riegos a ON t.id_tablon=a.tablon_id WHERE a.riego_id = :idriego ORDER BY numero ASC', {
+        replacements: {
+          idriego: id_riego
+        },
+        type: QueryTypes.SELECT
+      })
+      // return await db.sequelize.query('SELECT id_apriego, num_tablon FROM Aplicacion_riegos a INNER JOIN Tablones t ON a.tablon_id=t.id_tablon WHERE a.riego_id = :idriego', {
+      //   replacements: {
+      //     idriego: id_riego
+      //   },
+      //   type: QueryTypes.SELECT
       // })
+      //return await db.Aplicacion_riegos.findAll({ where: { riego_id: id_riego} })
+    } catch (error) {
+      return null
+    }
+  },
+  // Obtener total lluvia del mes actual de cada pluviometro
+  obtenerTotalLluviaActualPluviometro: async (parent, {id_pluviometro}, {db}, info) => {
+    try {
+      // return await db.sequelize.query('SELECT SUM(cantidad) FROM Lluvias WHERE MONTH(fecha) = MONTH(NOW()) AND pluviometro_id = :idpluvi', {
+      //   replacements: {
+      //     idpluvi: id_pluviometro
+      //   },
+      //   type: QueryTypes.SELECT
+      // })
+      return await db.Lluvias.sum('cantidad', {
+        where: {
+          [Op.and]: [
+            db.sequelize.literal('MONTH(fecha) = MONTH(NOW())')
+          ],
+          pluviometro_id: id_pluviometro
+        }
+      })
     } catch (error) {
       return null
     }
