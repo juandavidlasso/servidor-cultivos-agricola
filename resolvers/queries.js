@@ -822,5 +822,9 @@ module.exports= {
     } catch (error) {
       return null
     }
+  },
+  // Obtener suertes asociadas de cada pluviometro
+  obtenerSuertesAsociadas: async (parent, args, {db}, info) => {
+    return await db.Pluviometros.findAll({})
   }
 }
