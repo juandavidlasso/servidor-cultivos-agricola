@@ -9,7 +9,7 @@ module.exports= `
     agregarTablon(input: TablonInput, id_corte: Int) : Tablon
     agregarCorte(input: CorteInput) : Corte
     actualizarCorte(id_corte: Int, input: CorteInput) : Corte
-    agregarLabor(input: LaboresInput) : Labores
+    agregarLabor(input: [LaboresInput]) : Response
     agregarAplicacionHerbicida(input: AplicacionHerbicidasInput) : AplicacionHerbicidas
     agregarTratamientoHerbicidas(input: TratamientoHerbicidasInput) : TratamientoHerbicidas
     agregarAplicacionFertilizante(input: AplicacionFertilizantesInput) : AplicacionFertilizantes

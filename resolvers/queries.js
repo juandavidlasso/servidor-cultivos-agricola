@@ -344,15 +344,16 @@ module.exports= {
       if(nombre.trim() !== ""){
         return await db.Suertes.count({
           where: {
-            [Op.and]: [{nombre},{
-              createdAt:{
-                [Op.between]:[inicial,final]
-              }
-            }]
+            nombre
+            // [Op.and]: [{nombre},{
+            //   createdAt:{
+            //     [Op.between]:[inicial,final]
+            //   }
+            // }]
           }
         }).then(count=> {
           if(count!=0){
-            return db.sequelize.query('select count(*) as conteo from `cosechas` c INNER JOIN `cortes` o ON o.id_corte=c.corte_id INNER JOIN `suertes` s ON s.id_suerte=o.suerte_id where s.nombre=:nombr and s.createdAt BETWEEN :inicia AND :fina', {
+            return db.sequelize.query('select count(*) as conteo from `cosechas` c INNER JOIN `cortes` o ON o.id_corte=c.corte_id INNER JOIN `suertes` s ON s.id_suerte=o.suerte_id where s.nombre=:nombr and o.fecha_corte BETWEEN :inicia AND :fina', {
               replacements: {
                 nombr:nombre, 
                 inicia:inicial, 
@@ -375,16 +376,22 @@ module.exports= {
                           db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte)`,),'area'
                         ]]
                       },
+                      where: {
+                        fecha_corte:{
+                          [Op.between]:[inicial,final]
+                        }          
+                      },
                       include:[{
                         model: db.Suertes,
                         as:'suertePadre',
                         required: true,
                         where: {
-                          [Op.and]: [{nombre},{
-                            createdAt:{
-                              [Op.between]:[inicial,final]
-                            }
-                          }],          
+                          nombre
+                          // [Op.and]: [{nombre},{
+                          //   createdAt:{
+                          //     [Op.between]:[inicial,final]
+                          //   }
+                          // }],          
                         }
                       }]  
                     }]
@@ -407,15 +414,20 @@ module.exports= {
                 db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte)`,),'area'
               ]]
             },
+            where: {
+              fecha_corte:{
+                [Op.between]:[inicial,final]
+              }          
+            },
             include:[{
               model: db.Suertes,
               as:'suertePadre',
               required: true,
-              where: {
-                createdAt:{
-                  [Op.between]:[inicial,final]
-                }          
-              }
+              // where: {
+              //   createdAt:{
+              //     [Op.between]:[inicial,final]
+              //   }          
+              // }
             }]          
           }]
         });                        

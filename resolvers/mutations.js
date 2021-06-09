@@ -162,7 +162,10 @@ module.exports= {
   agregarLabor: async (parent, {input}, {db}, info) => {
     // crear labor
     try {
-      return await db.Labores.create(input)
+      for (let i = 0; i < input.length; i++) {
+        await db.Labores.bulkCreate([input[i]])
+      }
+      //return await db.Labores.create(input)
     } catch (error) {
       return null   
     } 
