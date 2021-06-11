@@ -344,7 +344,10 @@ module.exports= {
       if(nombre.trim() !== ""){
         return await db.Suertes.count({
           where: {
-            nombre
+            //[Op.in]: nombre.split(',')
+            nombre: {
+              [Op.in]: nombre.split(',')
+            }
             // [Op.and]: [{nombre},{
             //   createdAt:{
             //     [Op.between]:[inicial,final]
@@ -353,10 +356,10 @@ module.exports= {
           }
         }).then(count=> {
           if(count!=0){
-            return db.sequelize.query('select count(*) as conteo from `cosechas` c INNER JOIN `cortes` o ON o.id_corte=c.corte_id INNER JOIN `suertes` s ON s.id_suerte=o.suerte_id where s.nombre=:nombr and o.fecha_corte BETWEEN :inicia AND :fina', {
+            return db.sequelize.query('select count(*) as conteo from `cosechas` c INNER JOIN `cortes` o ON o.id_corte=c.corte_id INNER JOIN `suertes` s ON s.id_suerte=o.suerte_id where s.nombre IN(:nombr) and o.fecha_corte BETWEEN :inicia AND :fina', {
               replacements: {
-                nombr:nombre, 
-                inicia:inicial, 
+                nombr:nombre.split(','),
+                inicia:inicial,
                 fina:final
               },
               type: QueryTypes.SELECT
@@ -386,7 +389,9 @@ module.exports= {
                         as:'suertePadre',
                         required: true,
                         where: {
-                          nombre
+                          nombre: {
+                            [Op.in]: nombre.split(',')
+                          }
                           // [Op.and]: [{nombre},{
                           //   createdAt:{
                           //     [Op.between]:[inicial,final]
