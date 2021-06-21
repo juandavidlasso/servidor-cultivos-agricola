@@ -653,7 +653,8 @@ module.exports= {
           ],
           where: {
             fecha_corte: [
-              db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
+              db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM cortes c INNER JOIN suertes s ON s.id_suerte=c.suerte_id GROUP BY s.nombre)`)
+              //db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
             ]
           },
           group:['suerte_id','suertePadre.nombre'],
@@ -661,7 +662,8 @@ module.exports= {
             'id_corte','fecha_corte',
               [ db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte)`,),'area' ],
               [ db.sequelize.literal(`(SELECT MAX(numero) FROM cortes WHERE suerte_id=id_suerte)`,),'suerte_id' ],
-              [ db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte AND suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'fecha_inicio' ],
+              [ db.sequelize.literal(`(SELECT SUM(tablones.area) FROM tablones, cortes WHERE tablones.corte_id=cortes.id_corte AND cortes.activo=true AND cortes.suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'fecha_inicio' ]
+              // [ db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte AND suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'fecha_inicio' ],
           ],
           include:[{
             model: db.Suertes,
@@ -709,7 +711,8 @@ module.exports= {
           ],
           where: {
             fecha_corte: [
-              db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
+              db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM cortes c INNER JOIN suertes s ON s.id_suerte=c.suerte_id GROUP BY s.nombre)`)
+              //db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
             ]
           },
           group:['suerte_id','suertePadre.nombre'],
@@ -717,7 +720,9 @@ module.exports= {
             'id_corte','fecha_corte',
               [ db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte)`,),'area' ],
               [ db.sequelize.literal(`(SELECT MAX(numero) FROM cortes WHERE suerte_id=id_suerte)`,),'suerte_id' ],
-              [ db.sequelize.literal(`(SELECT SUM(area) FROM tablones WHERE corte_id=id_corte AND suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'fecha_inicio' ],
+              [ db.sequelize.literal(`(SELECT SUM(tablones.area) FROM tablones, cortes WHERE tablones.corte_id=cortes.id_corte AND cortes.activo=true AND cortes.suerte_id IN (SELECT MAX(id_suerte) FROM Suertes as Suerte WHERE Suerte.nombre=suertePadre.nombre))`,),'fecha_inicio' ]
+              //[ db.sequelize.literal(`( SELECT SUM(t.area) FROM Tablones t INNER JOIN Cortes c ON c.id_corte=t.corte_id WHERE c.id_corte IN (SELECT id_corte FROM Cortes WHERE fecha_corte IN (SELECT MAX(fecha_corte) FROM Cortes c INNER JOIN Suertes s ON s.id_suerte=c.suerte_id GROUP BY s.nombre)) AND c.suerte_id IN (SELECT MAX(s.id_suerte) FROM Suertes s WHERE s.nombre=suertePadre.nombre) )`,),'fecha_inicio' ],
+              //[ db.sequelize.literal(`( SELECT SUM(t.area) FROM tablones t INNER JOIN cortes c ON c.id_corte=t.corte_id WHERE c.id_corte=id_corte AND c.suerte_id IN (SELECT MAX(s.id_suerte) FROM suertes s WHERE s.nombre=suertePadre.nombre) )`,),'fecha_inicio' ],
           ],
           include:[{
             model: db.Suertes,
