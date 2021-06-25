@@ -26,7 +26,7 @@ module.exports= `
     obtenerAplicacionPlagas(id_corte: Int, id_tablon: Int, id_trapl: Int) : AplicacionPlaga
     obtenerTotalHtaSuertes : Float
     consultaProntuario(nombre: String, inicial: String, final: String) : [Cosecha]
-    obtenerEmail(email: String) : Usuario
+    obtenerUsuarioCodigo(codigo: String) : Usuario
     obtenerLabor(id_labor: Int) : Labores
     obtenerAplicacionHerbicida(id_aphe: Int) : AplicacionHerbicidas
     obtenerTratamientoHerbicida(id_trahe: Int) : TratamientoHerbicidas

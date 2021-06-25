@@ -6,6 +6,7 @@ module.exports=`
     email: String
     password: String
     rol: Int
+    codigo: String
   }
   type Response {
     success: Boolean

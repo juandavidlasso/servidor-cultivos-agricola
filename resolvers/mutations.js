@@ -1,4 +1,6 @@
 const bcryptjs = require('bcryptjs');
+const nodemailer = require('nodemailer');
+const { google } = require('googleapis')
 // Generar Token
 require ('dotenv').config();
 
@@ -681,5 +683,105 @@ module.exports= {
     } catch (error) {
       return null
     }
+  },
+  // Resetear password
+  resetPassword: async (parent, {email}, {db}, info) => {
+    // consulto si existe el usuario
+    const existeUsu = await db.Usuarios.findOne({ where: {email} })
+
+    if(!existeUsu) throw new Error(`No existe un usuario registrado con este correo electrónico.`)
+
+    // si existe genero codigo
+    const code = Math.random().toString(36).substring(2,15)
+
+    // contenido html del correo
+    const contentHTML = `
+      <div style="padding: 1px 1px; max-width: 600px; margin: auto;">
+        <div style="padding: 15px 25px; background-color: #000; height: 100px;">
+          <div style="padding: 3px; background-color: #ffffff; height: 92px; text-align: center;">
+            <img title="logo" src="https://cliente-agricola.vercel.app/static/media/logo.b2dda5e3.png" alt="button" width="90" />
+          </div>
+        </div>
+      </div>
+      
+      <div style="padding: 10px 15px;">&nbsp;</div>
+      <div style="padding: 10px 15px;">
+        <span style="font-size: 12pt; font-family: georgia, palatino, serif; color: #34495e;">Hemos recibido su solicitud para reestablecer su contrase&ntilde;a, por favor ingrese el siguiente c&oacute;digo en la aplicaci&oacute;n:</span>
+      </div>
+      
+      <div style="padding: 10px 15px;">
+        <p style="text-align: center;"><span style="font-size: 14pt;"><strong>${code}</strong></span></p>
+        <p style="text-align: center;">&nbsp;</p>
+        <p style="text-align: left;"><span style="font-size: 12pt; font-family: georgia, palatino, serif; color: #34495e;"><strong>Este es un correo autom&aacute;tico, por favor no responder.</strong></span></p>
+      </div>
+      <hr />
+      <div style="background-color: #2e3032; padding: 10px 15px;">
+        <p><span style="font-size: 12pt; font-family: georgia, palatino, serif; color: #ffffff;"><strong>Agr&iacute;cola L&amp;M S.A.S.</strong></span></p>
+        <p style="text-align: center;"><span style="font-size: 10pt; font-family: georgia, palatino, serif; color: #ffffff;"><strong>Cali, Valle del Cauca</strong></span></p>
+        <p style="text-align: center;"><span style="font-size: 10pt; font-family: georgia, palatino, serif; color: #ffffff;"><strong>Colombia</strong></span></p>
+      <hr />
+        <p><span style="font-size: 12pt; font-family: georgia, palatino, serif; color: #ffffff;">Aplicaci&oacute;n desarrollada por <span style="color: #ced4d9;"><strong>GLOBAL DATA SYSTEM</strong></span></span></p>
+        <p>&nbsp;</p>
+        <p><span style="font-size: 12pt; font-family: georgia, palatino, serif;"><span style="color: #ffffff;">Si tiene alguna duda comuniquese con </span><span style="color: #000080;">solucionesgdsystem@gmail.com</span></span></p>
+      </div>
+    `;
+
+    // credenciales del servicio de google apis
+    const CLIENT_ID = "63187787153-q4vqp5aer4248i3mofqf6q7h4j8rmogg.apps.googleusercontent.com"
+    const CLIENT_SECRET = "t6jAH4WMazKI3HJud18sIySt"
+    const REDIRECT_URI = "https://developers.google.com/oauthplayground"
+    const REFRESH_TOKEN = "1//04B4jrtb9vMOsCgYIARAAGAQSNwF-L9Ira5IpWlEJCU00Ax67uCcPpL7VzDa1XpUDVMom9h0m40m9DDiIxHlLEwPCxXuye5sv6xU"
+    
+    const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
+
+    oAuth2Client.setCredentials({
+      refresh_token: REFRESH_TOKEN
+    })
+
+    // funcion para enviar el correo
+    async function sendMail(){
+      try {
+        const getAccessToken = await oAuth2Client.getAccessToken()
+
+        const transport = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            type: "OAuth2",
+            user: "solucionesgdsystem@gmail.com",
+            clientId: CLIENT_ID,
+            clientSecret: CLIENT_SECRET,
+            refreshToken: REFRESH_TOKEN,
+            accessToken: getAccessToken
+          },
+          tls:{
+            rejectUnauthorized: false
+          }
+        })
+        const mailOptions = {
+          from: "Soporte Agr&iacute;cola <solucionesgdsystem@gmail.com>",
+          to: email,
+          subject: "Restaurar Contrasena",
+          html: contentHTML
+        }
+
+        const result = await transport.sendMail(mailOptions)
+
+        return result
+      } catch (error) {
+        return null
+      }
+    }
+
+    // envio el email
+    sendMail()
+      .then(async () => {
+        // actualizo codigo del usuario
+        await existeUsu.update({
+          codigo: code,
+          where: {email}
+        })
+        return existeUsu
+      })
+      .catch((error) => null)
   }
 }

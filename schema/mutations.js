@@ -48,5 +48,6 @@ module.exports= `
     eliminarLluvia(id_lluvia: Int) : Response
     eliminarRiego(id_riego: Int) : Response
     actualizarRiego(id_riego: Int, input: RiegoInput) : Riego
+    resetPassword(email: String) : Response
   }
 `

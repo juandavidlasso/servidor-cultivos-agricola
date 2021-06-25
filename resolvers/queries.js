@@ -441,9 +441,9 @@ module.exports= {
       return null    
     }
   },
-  obtenerEmail: async (parent, {email}, {db}, info) => {
+  obtenerUsuarioCodigo: async (parent, {codigo}, {db}, info) => {
     try {
-      return await db.Usuarios.findOne({ where: {email} })
+      return await db.Usuarios.findOne({ where: {codigo} })
     } catch (error) {
       return null   
     }

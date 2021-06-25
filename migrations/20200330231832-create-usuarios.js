@@ -27,6 +27,10 @@ module.exports = {
       rol: {
         allowNull: false,
         type: Sequelize.INTEGER
+      },
+      codigo: {
+        allowNull: true,
+        type: Sequelize.STRING
       }
     });
   },
