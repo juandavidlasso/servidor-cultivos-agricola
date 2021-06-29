@@ -653,8 +653,8 @@ module.exports= {
           ],
           where: {
             fecha_corte: [
-              db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM cortes c INNER JOIN suertes s ON s.id_suerte=c.suerte_id GROUP BY s.nombre)`)
-              //db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
+              //db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM cortes c INNER JOIN suertes s ON s.id_suerte=c.suerte_id GROUP BY s.nombre)`)
+              db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
             ]
           },
           group:['suerte_id','suertePadre.nombre'],
@@ -711,8 +711,8 @@ module.exports= {
           ],
           where: {
             fecha_corte: [
-              db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM cortes c INNER JOIN suertes s ON s.id_suerte=c.suerte_id GROUP BY s.nombre)`)
-              //db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
+              //db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM cortes c INNER JOIN suertes s ON s.id_suerte=c.suerte_id GROUP BY s.nombre)`)
+              db.sequelize.literal(`(SELECT MAX(fecha_corte) FROM Cortes as Corte GROUP BY suerte_id)`)
             ]
           },
           group:['suerte_id','suertePadre.nombre'],
