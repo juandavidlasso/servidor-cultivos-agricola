@@ -1,5 +1,5 @@
 const express = require('express');
-// graphql
+// Grahpql
 const {ApolloServer} = require('apollo-server-express');
 const schema = require('./schema');
 const resolvers = require('./resolvers');
