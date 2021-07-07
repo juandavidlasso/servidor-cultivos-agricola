@@ -52,5 +52,7 @@ module.exports= `
     obtenerAplicacionRiegos(id_riego: Int) : [Tablon]
     obtenerTotalLluviaActualPluviometro(id_pluviometro: Int) : Float
     obtenerSuertesAsociadas : [Pluviometro]
+    obtenerPromedioLluvias(time: Int) : [Lluvia]
+    obtenerTotalPluviometros : Int
   }
 `
