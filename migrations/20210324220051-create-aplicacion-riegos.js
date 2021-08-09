@@ -15,6 +15,10 @@ module.exports = {
       tablon_id: {
         type: Sequelize.INTEGER,
         allowNull: false
+      },
+      num_tablon: {
+        type: Sequelize.INTEGER,
+        allowNull: false
       }
     });
   },
