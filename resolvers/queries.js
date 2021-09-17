@@ -869,5 +869,20 @@ module.exports= {
     } catch (error) {
       return null
     }
+  },
+  // Obtener total resumen por año por pluviometro
+  obtenerResumenAnoPluviometro: async (parent, {year}, {db}, info) => {
+    try {
+      return await db.sequelize.query('SET lc_time_names = "es_CO"').then(async() => {
+        return await db.sequelize.query("SELECT id_lluvia, SUM(cantidad) AS cantidad, pluviometro_id FROM Lluvias WHERE date_format(fecha, '%Y') = :fecano GROUP BY pluviometro_id", {
+          replacements: {
+            fecano: year
+          },
+          type: QueryTypes.SELECT
+        })
+      })
+    } catch (error) {
+      return null
+    }
   }
 }

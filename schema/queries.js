@@ -54,5 +54,6 @@ module.exports= `
     obtenerSuertesAsociadas : [Pluviometro]
     obtenerPromedioLluvias(time: Int) : [Lluvia]
     obtenerTotalPluviometros : Int
+    obtenerResumenAnoPluviometro(year: Int): [Lluvia]
   }
 `
