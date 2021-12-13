@@ -566,6 +566,38 @@ module.exports= {
       return null
     }
   },
+  // Consultar lluvias
+  consultarLluvias: async(parent, {inicial, final, ano, id_pluviometro}, {db}, info) => {
+    try {
+      if(inicial!==0 & final===0) {
+        return await db.sequelize.query(`SELECT id_lluvia, fecha, cantidad FROM Lluvias WHERE EXTRACT(MONTH FROM fecha)=:fechaInicial AND EXTRACT(YEAR FROM fecha)=:fechaYear AND pluviometro_id=:idPluviometro ORDER BY EXTRACT(MONTH FROM fecha) ASC;`, {
+          replacements: {
+            fechaInicial: inicial,
+            fechaYear: ano,
+            idPluviometro: id_pluviometro
+          },
+          type: QueryTypes.SELECT })
+      } else if(inicial!==0 & final!==0) {
+        return await db.sequelize.query(`SELECT id_lluvia, fecha, cantidad FROM Lluvias WHERE EXTRACT(MONTH FROM fecha)>=:fechaInicial AND EXTRACT(MONTH FROM fecha)<=:fechaFinal AND EXTRACT(YEAR FROM fecha)=:fechaYear AND pluviometro_id=:idPluviometro ORDER BY EXTRACT(MONTH FROM fecha) ASC;`, {
+          replacements: {
+            fechaInicial: inicial,
+            fechaFinal: final,
+            fechaYear: ano,
+            idPluviometro: id_pluviometro
+          },
+          type: QueryTypes.SELECT })
+      } else if(inicial===0 & final===0) {
+        return await db.sequelize.query(`SELECT id_lluvia, fecha, cantidad FROM Lluvias WHERE EXTRACT(YEAR FROM fecha)=:fechaYear AND pluviometro_id=:idPluviometro ORDER BY EXTRACT(MONTH FROM fecha) ASC;`, {
+          replacements: {
+            fechaYear: ano,
+            idPluviometro: id_pluviometro
+          },
+          type: QueryTypes.SELECT })
+      }
+    } catch (error) {
+      return null
+    }
+  },
   // Valor total Herbicidas
   obtenerValorTotalHerb: async (parent, {id_aphe}, {db}, info) => {
     try {

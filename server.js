@@ -83,7 +83,8 @@ server.applyMiddleware({app})
 // production
 const PORT = process.env.PORT || 3050
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en puerto${PORT}`);
+  return null
+  // console.log(`Servidor corriendo en puerto${PORT}`);
 })
 
 
