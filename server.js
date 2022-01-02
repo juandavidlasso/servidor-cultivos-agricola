@@ -16,8 +16,6 @@ dotenv.config({path: 'variables.env'})
 // }
 const getMe = async req => {
   
-  //console.log(req.headers);
-  
   // obtener el token del servidor
   const token = req.headers['authorization'] || ''
 
@@ -25,8 +23,6 @@ const getMe = async req => {
     try {
       // verificar el token del frontend usuario
       const usuario = jwt.verify(token.replace('Bearer ', ''), process.env.SECRETO)
-
-      //console.log(usuarioActual)
 
       // agregamos el usuaurio actual al request
       //req.usuarioActual = usuarioActual
@@ -73,7 +69,7 @@ app.use((req, res, next) => {
 });
 
 app.get('/', function(req,res){
-  res.status(200).send('Pagina no accesible, ingrese a http://localhost:3000');
+  res.status(200).send('Pagina no accesible, ingrese a https://servidor-cultivos-agricola.herokuapp.com/graphql');
 });
 
 server.applyMiddleware({app})
@@ -84,7 +80,6 @@ server.applyMiddleware({app})
 const PORT = process.env.PORT || 3050
 app.listen(PORT, () => {
   return null
-  // console.log(`Servidor corriendo en puerto${PORT}`);
 })
 
 

@@ -38,9 +38,6 @@ module.exports= `
     obtenerSuerteRenovadaCorteTablon: [Suerte]
     obtenerSuerteCorteTablon: [Suerte]
     obtenerPluviometros: [Pluviometro]
-    obtenerLluvias(fechanueva: String, id_pluviometro: Int): [Lluvia]
-    obtenerLluviasAno(anofecha: String, id_pluviometro: Int): [Lluvia]
-    obtenerLluviasActuales(id_pluviometro: Int): [Lluvia]
     consultarLluvias(inicial: Int, final: Int, ano: Int, id_pluviometro: Int) : [Lluvia]
     obtenerValorTotalHerb(id_aphe: Int): Float
     obtenerValorTotalFerti(id_apfe: Int): Float

@@ -529,10 +529,10 @@ module.exports= {
               success: false
           };
       }, function(err){
-          console.log(err);
+          return null
       }); 
     } catch (error) {
-      console.log(error);
+      return null
     }
   },
   eliminarTablon: async (parent, {id_tablon}, {db}, info) => {
