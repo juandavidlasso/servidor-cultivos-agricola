@@ -759,7 +759,7 @@ module.exports= {
           required: false,
           where: {
             [Op.and]: [
-                db.sequelize.literal('MONTH(fecha) = MONTH(NOW())')
+                db.sequelize.literal('MONTH(fecha) = MONTH(NOW()) AND YEAR(fecha) = YEAR(NOW())')
             ]
           }
         }]
