@@ -751,7 +751,7 @@ module.exports= {
         ],
         attributes: [
           'id_pluviometro','nombre',
-          [ db.sequelize.literal('(SELECT SUM(cantidad) FROM lluvias WHERE id_pluviometro=pluviometro_id AND MONTH(fecha) = MONTH(NOW()) GROUP BY pluviometro_id)',),'suertesAsociadas' ]
+          [ db.sequelize.literal('(SELECT SUM(cantidad) FROM lluvias WHERE id_pluviometro=pluviometro_id AND MONTH(fecha) = MONTH(NOW()) AND YEAR(fecha) = YEAR(NOW()) GROUP BY pluviometro_id)',),'suertesAsociadas' ]
         ],
         include: [{
           model: db.Lluvias,
