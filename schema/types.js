@@ -295,4 +295,10 @@ module.exports=`
     cantidad: Float!
     tiempo: String!
   }
+
+
+  type ResponseMessage {
+    success: Boolean,
+    message: String
+  }
 `

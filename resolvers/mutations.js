@@ -31,7 +31,7 @@ module.exports= {
     try {
       return await db.Usuarios.create(input)
     } catch (error) {
-      return null
+      return error
     }
   },
   autenticarUsuario: async (parent, { input }, { db }, info) => {
@@ -68,7 +68,7 @@ module.exports= {
     try {
       return await db.Suertes.create(input)
     } catch (error) {
-      return null    
+      return error    
     }
   },
   agregarSuerteRenovada: async (parent, {suerte}, {db}, info) => {
@@ -115,7 +115,7 @@ module.exports= {
         }
       });      
     } catch (error) {
-      return null
+      return error
     }  
   },
   agregarTablon: async (parent, {input, id_corte}, {db}, info) => {
@@ -135,7 +135,7 @@ module.exports= {
     try {
       return await db.Tablones.create(input)
     } catch (error) {
-      return null     
+      return error     
     }
   },
   agregarCorte: async (parent, {input}, {db}, info) => {
@@ -143,7 +143,7 @@ module.exports= {
     try {
       return await db.Cortes.create(input)
     } catch (error) {
-      return null    
+      return error    
     }
   },
   actualizarCorte: async (parent, {id_corte, input}, {db}, info) => {
@@ -158,7 +158,7 @@ module.exports= {
       await corte.update(input, { where:{id_corte} })
       return corte
     } catch (error) {
-      return null    
+      return error    
     }
   },
   agregarLabor: async (parent, {input}, {db}, info) => {
@@ -169,7 +169,7 @@ module.exports= {
       }
       //return await db.Labores.create(input)
     } catch (error) {
-      return null   
+      return error   
     } 
   },
   agregarAplicacionHerbicida: async (parent, {input}, {db}, info) => {
@@ -181,7 +181,7 @@ module.exports= {
         corte_id: input.corte_id
       })
     } catch (error) {
-      return null    
+      return error    
     }
   },
   agregarTratamientoHerbicidas: async (parent, {input}, {db}, info) => {
@@ -197,7 +197,7 @@ module.exports= {
         aphe_id: input.aphe_id
       })
     } catch (error) {
-      return null     
+      return error     
     }
   },
   agregarAplicacionFertilizante: async (parent, {input}, {db}, info) => {
@@ -205,7 +205,7 @@ module.exports= {
     try {
       return await db.Aplicacion_fertilizantes.create(input)
     } catch (error) {
-      return null    
+      return error    
     }
   },
   agregarTratamientoFertilizante: async (parent, {input}, {db}, info) => {
@@ -213,7 +213,7 @@ module.exports= {
     try {
       return await db.Tratamiento_fertilizantes.create(input)
     } catch (error) {
-      return null    
+      return error    
     }
   },
   agregarPluviometro: async (parent, {input}, {db}, info) => {
@@ -228,7 +228,7 @@ module.exports= {
     try {
       return await db.Pluviometros.create(input)
     } catch (error) {
-      return null   
+      return error   
     }
   },
   agregarLluvia: async (parent, {input}, {db}, info) => {
@@ -236,7 +236,7 @@ module.exports= {
     try {
       return await db.Lluvias.create(input)
     } catch (error) {
-      return null   
+      return error   
     }
   },
   agregarCosecha: async (root, {input}, {db}, info) => {
@@ -244,7 +244,7 @@ module.exports= {
     try {
       return await db.Cosechas.create(input)
     } catch (error) {
-      return null          
+      return error          
     }
   },
   actualizarCosecha: async (parent, {id_cosecha, input}, {db}, info) => {
@@ -259,15 +259,26 @@ module.exports= {
       await cosecha.update(input, {where: {id_cosecha}} )
       return cosecha
     } catch (error) {
-      return null   
+      return error   
     }
   },
   agregarAplicacionPlaga: async (parent, {input}, {db}, info) => {
     // crear aplicacion plaga
     try {
-      return await db.Aplicacion_plagas.create(input)
+      for (let i = 0; i < input.length; i++) {
+        await db.Aplicacion_plagas.bulkCreate([input[i]])
+      }
+      
+      return {
+        success: true,
+        message: 'La aplicación se registró correctamente en los tablones seleccionados!'
+      }
+      // return await db.Aplicacion_plagas.create(input)
     } catch (error) {
-      return null    
+      return {
+        success: false,
+        message: error
+      }
     }
   },
   agregarTratamientoPlaga: async (parent, {input}, {db}, info) => {
@@ -275,7 +286,7 @@ module.exports= {
     try {
       return await db.Tratamiento_plagas.create(input)
     } catch (error) {
-      return null    
+      return error    
     }
   },
   actualizarEmail: async (parent, {id_usuario, input}, {db}, info) => {
@@ -295,7 +306,7 @@ module.exports= {
       await buscarEmail.update(input, { where: {id_usuario} })
       return buscarEmail
     } catch (error) {
-      return null   
+      return error   
     }
   },
   actualizarSuerte: async (parent, {id_suerte, input}, {db}, info) => {
@@ -310,7 +321,7 @@ module.exports= {
       await buscarSuerte.update(input, { where: {id_suerte} })
       return buscarSuerte
     } catch (error) {
-      return null
+      return error
     }
   },
   actualizarDatosCorte: async (parent, {id_corte, input}, {db}, info) => {
@@ -325,7 +336,7 @@ module.exports= {
       await buscarCorte.update(input, { where: {id_corte} })
       return buscarCorte
     } catch (error) {
-      return null    
+      return error    
     }
   },
   actualizarLabor: async (parent, {id_labor, input}, {db}, info) => {
@@ -340,7 +351,7 @@ module.exports= {
       await buscarLabor.update(input, { where: {id_labor} })
       return buscarLabor
     } catch (error) {
-      return null    
+      return error    
     }
   },
   actualizarAPHE: async (parent, {id_aphe, input}, {db}, info) => {
@@ -355,7 +366,7 @@ module.exports= {
       await buscarAPHE.update(input, { where: {id_aphe} })
       return buscarAPHE
     } catch (error) {
-      return null    
+      return error    
     }
   },
   actualizarTRAHE: async (parent, {id_trahe, input}, {db}, info) => {
@@ -370,7 +381,7 @@ module.exports= {
       await buscarTRAHE.update(input, { where: {id_trahe} })
       return buscarTRAHE
     } catch (error) {
-      return null    
+      return error    
     }
   },
   actualizarAPFE: async (parent, {id_apfe, input}, {db}, info) => {
@@ -385,7 +396,7 @@ module.exports= {
       await buscarAPFE.update(input, { where: {id_apfe} })
       return buscarAPFE
     } catch (error) {
-      return null    
+      return error    
     }
   },
   actualizarTRAFE: async (parent, {id_trafe, input}, {db}, info) => {
@@ -400,7 +411,7 @@ module.exports= {
       await buscarTRAFE.update(input, { where: {id_trafe} })
       return buscarTRAFE
     } catch (error) {
-      return null     
+      return error     
     }
   },
   actualizarAPLA: async (parent, {id_apla, input}, {db}, info) => {
@@ -415,7 +426,7 @@ module.exports= {
       await buscarAPLA.update(input, { where: {id_apla} })
       return buscarAPLA
     } catch (error) {
-      return null    
+      return error    
     }
   },
   actualizarTRAPL: async (parent, {id_trapl, input}, {db}, info) => {
@@ -430,7 +441,7 @@ module.exports= {
       await buscarTRAPL.update(input, { where: {id_trapl} })
       return buscarTRAPL
     } catch (error) {
-      return null    
+      return error    
     }
   },
   actualizarTablon: async (parent, {id_tablon, input}, {db}, info) => {
@@ -445,7 +456,7 @@ module.exports= {
       await buscarTablon.update(input, { where: {id_tablon} })
       return buscarTablon
     } catch (error) {
-      return null   
+      return error   
     }
   },
   actualizarPluviometro: async (parent, {id_pluviometro, input}, {db}, info) => {
@@ -460,7 +471,7 @@ module.exports= {
       await buscarPluviometro.update(input, { where: {id_pluviometro} })
       return buscarPluviometro
     } catch (error) {
-      return null  
+      return error  
     }
   },
   actualizarLluvia: async (parent, {id_lluvia, input}, {db}, info) => {
@@ -475,7 +486,7 @@ module.exports= {
       await buscarLluvia.update(input, { where: {id_lluvia} })
       return buscarLluvia
     } catch (error) {
-      return null  
+      return error  
     }
   },
   actualizarUsuario: async (parent, {id_usuario, input}, {db}, info) => {
@@ -495,7 +506,7 @@ module.exports= {
       await buscarUser.update(input, { where: {id_usuario} })
       return buscarUser
     } catch (error) {
-      return null  
+      return error  
     }
   },
   terminarCorte: async (parent, {id_corte, input}, {db}, info) => {
@@ -510,7 +521,7 @@ module.exports= {
       await terminarCorte.update(input, { where: {id_corte} })
       return terminarCorte
     } catch (error) {
-      return null
+      return error
     }
   },
   borrarSuerte: async (parent, {id_suerte}, {db}, info) => {
@@ -532,14 +543,14 @@ module.exports= {
           return null
       }); 
     } catch (error) {
-      return null
+      return error
     }
   },
   eliminarTablon: async (parent, {id_tablon}, {db}, info) => {
     try {
       await db.Tablones.destroy({ where: {id_tablon} })
     } catch (error) {
-      return null
+      return error
     }
   },
   // Eliminar labor
@@ -552,7 +563,7 @@ module.exports= {
     try {
       return await silabor.destroy()
     } catch (error) {
-      return null
+      return error
     }
   },
   // Eliminar aplicacion herbicida
@@ -565,7 +576,7 @@ module.exports= {
     try {
       return await siaphe.destroy()
     } catch (error) {
-      return null
+      return error
     }
   },
   // Eliminar tratamiento herbicida
@@ -578,7 +589,7 @@ module.exports= {
     try {
       return await sitrahe.destroy()
     } catch (error) {
-      return null
+      return error
     }
   },
   // Eliminar aplicacion fertilizante
@@ -591,7 +602,7 @@ module.exports= {
     try {
       return await siapfe.destroy()
     } catch (error) {
-      return null
+      return error
     }
   },
   // Eliminar tratamiento herbicida
@@ -604,7 +615,7 @@ module.exports= {
     try {
       return await sitrafe.destroy()
     } catch (error) {
-      return null
+      return error
     }
   },
   // Eliminar aplicacion plaga
@@ -617,7 +628,7 @@ module.exports= {
     try {
       return await siapla.destroy()
     } catch (error) {
-      return null
+      return error
     }
   },
   // Agregar riego con fecha y numero de riego
@@ -625,7 +636,7 @@ module.exports= {
     try {
       return await db.Riegos.create(input)
     } catch (error) {
-      return null
+      return error
     }
   },
   // Agregar aplicacion riego a un riego y un tablon id
@@ -643,7 +654,7 @@ module.exports= {
     try {
       return await db.Aplicacion_riegos.create(input)
     } catch (error) {
-      return null
+      return error
     }
   },
   // Eliminar lluvia
@@ -655,7 +666,7 @@ module.exports= {
     try {
       return await silluvia.destroy()
     } catch (error) {
-      return null
+      return error
     }
   },
   // Eliminar Riego
@@ -667,7 +678,7 @@ module.exports= {
     try {
       return await siriego.destroy()
     } catch (error) {
-      return null
+      return error
     }    
   },
   // editar fecha de riego
@@ -681,7 +692,7 @@ module.exports= {
       await siApRiego.update(input, { where: {id_riego} })
       return siApRiego
     } catch (error) {
-      return null
+      return error
     }
   },
   // Resetear password
@@ -768,7 +779,7 @@ module.exports= {
 
         return result
       } catch (error) {
-        return null
+        return error
       }
     }
 
@@ -782,6 +793,6 @@ module.exports= {
         })
         return existeUsu
       })
-      .catch((error) => null)
+      .catch((error) => error)
   }
 }

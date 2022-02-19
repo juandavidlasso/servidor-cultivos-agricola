@@ -18,7 +18,7 @@ module.exports= `
     agregarLluvia(input: LluviaInput) : Lluvia
     agregarCosecha(input: CosechaInput) : Cosecha
     actualizarCosecha(id_cosecha: Int, input: CosechaInput) : Cosecha
-    agregarAplicacionPlaga(input: AplicacionPlagaInput) : AplicacionPlaga
+    agregarAplicacionPlaga(input: [AplicacionPlagaInput]) : ResponseMessage
     agregarTratamientoPlaga(input: TratamientoPlagaInput) : TratamientoPlaga
     actualizarEmail(id_usuario: Int, input: UsuarioInput) : Usuario
     actualizarSuerte(id_suerte: Int, input: SuerteInput) : Suerte
