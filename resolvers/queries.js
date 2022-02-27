@@ -12,7 +12,7 @@ module.exports= {
       //return db.Suertes.findAll({where:{renovada:'SI'}, order:[ ['nombre', 'ASC'] + 0,['nombre', 'ASC'] ]}); 
       return await db.sequelize.query(`select id_suerte, nombre, area, variedad, zona, renovada, createdAt, updatedAt from suertes where renovada='SI' order by nombre + 0, nombre`, { type: QueryTypes.SELECT}); 
     } catch (error) {
-      return null
+      return error
     }
   },
   // Cortes renovados por cada suerte
@@ -28,7 +28,7 @@ module.exports= {
           }}]        
       }); 
     } catch (error) {
-      return null
+      return error
     }
   },
   // obtenerSuertes: async (parent, args, {db}, info) => {
@@ -43,31 +43,31 @@ module.exports= {
     try {
       return await db.Suertes.findOne({ where: {id_suerte} })
     } catch (error) {
-      return null     
-    } 
+      return error
+    }
   },
   // consulta numero de cortes de cada suerte
   obtenerCortesPorSuerte: async (parent, {id_suerte}, {db}, info) => {
     try {
       return await db.Cortes.count({ where: {suerte_id:id_suerte} })
     } catch (error) {
-      return null    
-    } 
+      return error
+    }
   },
   // consulta cada corte
   obtenerCorte: async (parent, {id_corte}, {db}, info) => {
     try {
       return await db.Cortes.findOne({ where: {id_corte} })
     } catch (error) {
-      return null    
-    } 
+      return error
+    }
   },
   // consulta labores de cada corte
   obtenerLaborPorCorte: async (parent, {id_corte}, {db}, info) => {
     try {
       return await db.Labores.findAll({ where: {corte_id:id_corte} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta cada labor
@@ -75,7 +75,7 @@ module.exports= {
     try {
       return await db.Labores.findOne({ where: {id_labor} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta aplicaciones herbicidades de cada corte
@@ -83,7 +83,7 @@ module.exports= {
     try {
       return await db.Aplicacion_herbicidas.findAll({ where: {corte_id:id_corte} })
     } catch (error) {
-      return null   
+      return error
     }
   },
   // consulta cada aplicacion herbicida
@@ -91,7 +91,7 @@ module.exports= {
     try {
       return await db.Aplicacion_herbicidas.findOne({ where: {id_aphe} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta tratamientos herbicidas por aplicacion herbicida
@@ -99,7 +99,7 @@ module.exports= {
     try {
       return await db.Tratamiento_herbicidas.findAll({ where: {aphe_id:id_aphe} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta cada tratamiento herbicida
@@ -107,7 +107,7 @@ module.exports= {
     try {
       return await db.Tratamiento_herbicidas.findOne({ where: {id_trahe} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta aplicaciones fertilizantes de cada corte
@@ -115,7 +115,7 @@ module.exports= {
     try {
       return await db.Aplicacion_fertilizantes.findAll({ where: {corte_id:id_corte} })
     } catch (error) {
-      return null   
+      return error
     }
   },
   // consulta cada aplicacion fertilizante
@@ -123,7 +123,7 @@ module.exports= {
     try {
       return await db.Aplicacion_fertilizantes.findOne({ where: {id_apfe} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta tratamiento fertilizante de cada aplicacion fertilizante
@@ -131,7 +131,7 @@ module.exports= {
     try {
       return await db.Tratamiento_fertilizantes.findAll({ where: {apfe_id:id_apfe} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta cada tratamiento fertilizante
@@ -139,7 +139,7 @@ module.exports= {
     try {
       return await db.Tratamiento_fertilizantes.findOne({ where: {id_trafe} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta cosechas de cada corte
@@ -147,7 +147,7 @@ module.exports= {
     try {
       return await db.Cosechas.findAll({ where: {corte_id:id_corte} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta cada cosecha
@@ -155,7 +155,7 @@ module.exports= {
     try {
       return await db.Cosechas.findOne({ where: {id_cosecha} })
     } catch (error) {
-      return null     
+      return error
     }
   },
   // consulta area de cada suerte sumando el area de los tablones de cada corte
@@ -182,7 +182,7 @@ module.exports= {
         }]
       })
     } catch (error) {
-      return null     
+      return error
     }
   },
   // consulta area de cada corte para calcular el tch y tchm
@@ -200,7 +200,7 @@ module.exports= {
         }]
       })
     } catch (error) {
-      return null     
+      return error
     }
   },
   // consulta listado de pluviometros con sus respectivas lluvias
@@ -218,7 +218,7 @@ module.exports= {
         }]
       })
     } catch (error) {
-      return null    
+      return error
     }
   },
   // consulta listado de tablones de cada corte
@@ -226,7 +226,7 @@ module.exports= {
     try {
       return await db.Tablones.findAll({ where: {corte_id: id_corte}, order:[['numero','ASC']] })
     } catch (error) {
-      return null   
+      return error
     }
   },
   // consulta cada tablon
@@ -234,7 +234,7 @@ module.exports= {
     try {
       return await db.Tablones.findOne({ where: {id_tablon} })
     } catch (error) {
-      return null   
+      return error
     }
   },
   // consulta cantidad de tablones de cada corte
@@ -261,7 +261,7 @@ module.exports= {
         }]
       })
     } catch (error) {
-      return null   
+      return error
     }
   },
   obtenerCorteActual: async (parent, {id_suerte}, {db}, info) => {
@@ -273,21 +273,21 @@ module.exports= {
         }
       })
     } catch (error) {
-      return null    
+      return error
     }
   },
   obtenerTratamientoPlagas: async (parent, args, {db}, info) => {
     try {
       return await db.Tratamiento_plagas.findAll()
     } catch (error) {
-      return null    
+      return error
     }
   },
   obtenerTratamientoPlaga: async (parent, {id_trapl}, {db}, info) => {
     try {
       return await db.Tratamiento_plagas.findOne({ where: {id_trapl} })
     } catch (error) {
-      return null    
+      return error
     }
   },
   obtenerAplicacionPlagas: async (parent, {id_corte, id_tablon, id_trapl}, {db}, info) => {
@@ -300,7 +300,7 @@ module.exports= {
         }
       })
     } catch (error) {
-      return null     
+      return error
     }
   },
   obtenerAplicacionPlaga: async (parent, {id_apla}, {db}, info) => {
@@ -308,7 +308,7 @@ module.exports= {
       return await db.Aplicacion_plagas.findOne({ where: {id_apla}
       })
     } catch (error) {
-      return null   
+      return error
     }
   },
   // area total de hectareas activas
@@ -326,7 +326,7 @@ module.exports= {
         }]
       })
     } catch (error) {
-      return null   
+      return error
     }
   },
   consultaProntuario: async (parent, {nombre,inicial,final}, {db}, info) => {
@@ -428,14 +428,14 @@ module.exports= {
         });                        
       }
     } catch (error) {
-      return null    
+      return error
     }
   },
   obtenerUsuarioCodigo: async (parent, {codigo}, {db}, info) => {
     try {
       return await db.Usuarios.findOne({ where: {codigo} })
     } catch (error) {
-      return null   
+      return error
     }
   },
   // Listado de suertes y corte para el modal transferir informacion
@@ -455,7 +455,7 @@ module.exports= {
         }]
       }); 
     } catch (error) {
-      return null
+      return error
     }
   },
   // obtener suertes renovadas con listado de cortes y tablones para modal
@@ -477,7 +477,7 @@ module.exports= {
         }]
       }); 
     } catch (error) {
-      return null
+      return error
     }
   },
   // Suerte corte y tablon para modal de plagas
@@ -502,7 +502,7 @@ module.exports= {
         }]
       })
     } catch (error) {
-      return null
+      return error
     }
   },
   // Listado de pluviometros
@@ -510,7 +510,7 @@ module.exports= {
     try {
       return await db.Pluviometros.findAll({ order: [['nombre', 'ASC']] })
     } catch (error) {
-      return null
+      return error
     }
   },
   // Consultar lluvias
@@ -542,7 +542,7 @@ module.exports= {
           type: QueryTypes.SELECT })
       }
     } catch (error) {
-      return null
+      return error
     }
   },
   // Valor total Herbicidas
@@ -559,7 +559,7 @@ module.exports= {
         }]
       })
     } catch (error) {
-      return null
+      return error
     }
   },
   // Valor total fertilizantes
@@ -576,7 +576,7 @@ module.exports= {
         }]
       })
     } catch (error) {
-      return null
+      return error
     }
   },
   // Nombre suerte para select
@@ -585,7 +585,7 @@ module.exports= {
       //return db.Suertes.findAll({where:{renovada:'SI'}, order:[ ['nombre', 'ASC'] + 0,['nombre', 'ASC'] ]}); 
       return await db.sequelize.query(`select id_suerte, nombre from suertes where renovada='SI' order by nombre + 0, nombre`, { type: QueryTypes.SELECT}); 
     } catch (error) {
-      return null
+      return error
     }
   },
   // Obtener numero maximo de riego
@@ -603,7 +603,7 @@ module.exports= {
         }
       })
     } catch (error) {
-      return null
+      return error
     }
   },
   // obtener riegos de cada corte
@@ -620,7 +620,7 @@ module.exports= {
         }
       })
     } catch (error) {
-      return null
+      return error
     }
   },
   obtenerDatosActuales: async (parent, {nombres}, {db}, info) => {
@@ -739,7 +739,7 @@ module.exports= {
         })
       }
     } catch(error) {
-      return null
+      return error
     }
   },
   // Resumen pluviometros y lluvias
@@ -765,7 +765,7 @@ module.exports= {
         }]
       })
     } catch (error) {
-      return null
+      return error
     }
   },
   // Resumen por año de pluviometros
@@ -778,7 +778,7 @@ module.exports= {
         type: QueryTypes.SELECT
       })
     } catch (error) {
-      return null
+      return error
     }
   },
   // Obtener aplicacion riegos de cada riego
@@ -798,7 +798,7 @@ module.exports= {
       // })
       //return await db.Aplicacion_riegos.findAll({ where: { riego_id: id_riego} })
     } catch (error) {
-      return null
+      return error
     }
   },
   // Obtener total lluvia del mes actual de cada pluviometro
@@ -813,7 +813,7 @@ module.exports= {
         }
       })
     } catch (error) {
-      return null
+      return error
     }
   },
   // Obtener suertes asociadas de cada pluviometro
@@ -829,14 +829,14 @@ module.exports= {
       type: QueryTypes.SELECT
       })
     } catch (error) {
-      return null
+      return error
     }
   },
   obtenerTotalPluviometros: async (parent, args, {db}, info) => {
     try {
       return await db.Pluviometros.count()
     } catch (error) {
-      return null
+      return error
     }
   },
   // Obtener total resumen por año por pluviometro
@@ -849,7 +849,34 @@ module.exports= {
         type: QueryTypes.SELECT
       })
     } catch (error) {
-      return null
+      return error
+    }
+  },
+  // Obtener ultimo corte para calcular edad y mostrar alerta
+  obtenerAlertasAplicaciones: async (parent, args, {db}, info) => {
+    try {
+      return await db.Suertes.findAll({
+        attributes: ['nombre'],
+        order: [
+          [
+            'nombre','ASC',
+          ]
+        ],
+        where: {
+          renovada:'SI'
+        },
+        include: [{
+          model: db.Cortes,
+          as: 'listcortes',
+          required: true,
+          attributes: ['numero', 'fecha_inicio'],
+          where: {
+            activo: 1
+          }
+        }]
+      })
+    } catch (error) {
+      return error
     }
   }
 }

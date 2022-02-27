@@ -301,4 +301,14 @@ module.exports=`
     success: Boolean,
     message: String
   }
+
+  type alertaMensaje {
+    suerte: String,
+    mensaje: String
+  }
+
+  input alertaMensajeInput {
+    suerte: String,
+    mensaje: String
+  }
 `

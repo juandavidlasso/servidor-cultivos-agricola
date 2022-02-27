@@ -710,7 +710,7 @@ module.exports= {
       <div style="padding: 1px 1px; max-width: 600px; margin: auto;">
         <div style="padding: 15px 25px; background-color: #000; height: 100px;">
           <div style="padding: 3px; background-color: #ffffff; height: 92px; text-align: center;">
-            <img title="logo" src="https://cliente-agricola.vercel.app/static/media/logo.b2dda5e3.png" alt="button" width="90" />
+            <img title="logo" src="https://cliente-agricola.vercel.app/static/media/logo.e11f10d35a627b5c5978.png" alt="button" width="90" />
           </div>
         </div>
       </div>
@@ -769,7 +769,7 @@ module.exports= {
           }
         })
         const mailOptions = {
-          from: "Soporte Agr&iacute;cola <solucionesgdsystem@gmail.com>",
+          from: "Soporte Agrícola <solucionesgdsystem@gmail.com>",
           to: email,
           subject: "Restaurar Contrasena",
           html: contentHTML
@@ -794,5 +794,137 @@ module.exports= {
         return existeUsu
       })
       .catch((error) => error)
+  },
+  // Correo de alertas de aplicaciones
+  enviarAlertas: async (parent, {input}, {db}, info) => {
+    try {
+      // contenido html del correo
+      const contentHTML = `
+        <div style="padding: 1px 1px; max-width: 600px; margin: auto;">
+          <div style="padding: 15px 25px; background-color: #000; height: 100px;">
+            <div style="padding: 3px; background-color: #ffffff; height: 92px; text-align: center;">
+              <img title="logo" src="https://cliente-agricola.vercel.app/static/media/logo.e11f10d35a627b5c5978.png" alt="button" width="90" />
+            </div>
+          </div>
+        </div>
+        
+        <div style="padding: 10px 15px;">&nbsp;</div>
+        <div style="padding: 10px 15px;">
+          <p style="font-size: 16pt; font-family: georgia, palatino, serif; color: #B03A2E; text-align: center;">Recordatorio</p>
+          <p style="text-align: left;"><span style="font-size: 14pt;">Hoy se cumple la fecha para las siguientes aplicaciones de productos:</span></p>
+        </div>
+        
+        <div style="padding: 10px 15px;">
+          ${input.length === 0 ?
+            `<p style="text-align: left;"><span style="font-size: 14pt;"><strong>No hay datos</strong></span></p>`
+          :
+            input.map(alerta => {
+              const {suerte, mensaje} = alerta
+              return (
+                `<p style="text-align: left;"><span style="font-size: 14pt;"><strong>Suerte ${suerte}</strong></span></p>
+                <p style="text-align: left;"><span style="font-size: 12pt;">${mensaje}</span></p>`
+              )
+            })
+          }
+          <p style="text-align: center;">&nbsp;</p>
+          <p style="text-align: left;"><span style="font-size: 12pt; font-family: georgia, palatino, serif; color: #34495e;"><strong>Este es un correo autom&aacute;tico, por favor no responder.</strong></span></p>
+        </div>
+        <hr />
+        <div style="background-color: #2e3032; padding: 10px 15px;">
+          <p><span style="font-size: 12pt; font-family: georgia, palatino, serif; color: #ffffff;"><strong>Agr&iacute;cola L&amp;M S.A.S.</strong></span></p>
+          <p style="text-align: center;"><span style="font-size: 10pt; font-family: georgia, palatino, serif; color: #ffffff;"><strong>Cali, Valle del Cauca</strong></span></p>
+          <p style="text-align: center;"><span style="font-size: 10pt; font-family: georgia, palatino, serif; color: #ffffff;"><strong>Colombia</strong></span></p>
+        <hr />
+          <p><span style="font-size: 12pt; font-family: georgia, palatino, serif; color: #ffffff;">Aplicaci&oacute;n desarrollada por <span style="color: #ced4d9;"><strong>GLOBAL DATA SYSTEM</strong></span></span></p>
+          <p>&nbsp;</p>
+          <p><span style="font-size: 12pt; font-family: georgia, palatino, serif;"><span style="color: #ffffff;">Si tiene alguna duda comuniquese con </span><span style="color: #000080;">solucionesgdsystem@gmail.com</span></span></p>
+        </div>
+      `;
+
+      // credenciales del servicio de google apis
+      const CLIENT_ID = "617673617796-t6up0ufq0pvpdfh746gjn6o3308ujmmj.apps.googleusercontent.com"
+      const CLIENT_SECRET = "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"
+      const REDIRECT_URI = "https://developers.google.com/oauthplayground"
+      const REFRESH_TOKEN = "1//04fBSGHbgiGZACgYIARAAGAQSNwF-L9IrISqn2YzlmUTQgfcR_S0s4cA2bgOarwqyuPTYjPoci934JDQLJddsbJpnEk4_xmwYWZo"
+      
+      const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
+
+      oAuth2Client.setCredentials({
+        refresh_token: REFRESH_TOKEN
+      })
+
+      // Variable para validar si envia o no correo
+      let valido
+      let msj
+
+      // funcion para enviar el correo
+      async function sendMail(){
+        try {
+          const getAccessToken = await oAuth2Client.getAccessToken()
+
+          const transport = nodemailer.createTransport({
+            service: "gmail",
+            auth: {
+              type: "OAuth2",
+              user: "solucionesgdsystem@gmail.com",
+              clientId: CLIENT_ID,
+              clientSecret: CLIENT_SECRET,
+              refreshToken: REFRESH_TOKEN,
+              accessToken: getAccessToken
+            },
+            tls:{
+              rejectUnauthorized: false
+            }
+          })
+          const mailOptions = {
+            from: "Soporte Agrícola <solucionesgdsystem@gmail.com>",
+            to: 'campo@agricolalm.com, haciendasantaelena@hotmail.com',
+            subject: "Recordatorio aplicación productos",
+            html: contentHTML
+          }
+
+          const result = await transport.sendMail(mailOptions)
+
+          return result
+        } catch (error) {
+          return error
+        }
+      }
+
+      // envio el email
+      await sendMail().then((result) => {
+        const status = result.response.status
+        const acept = result.accepted
+
+        // Valido si envio
+        if(acept !== undefined) {
+          valido = true,
+          msj = 'Las alertas se enviaron con éxito al correo.'
+        }
+
+        // Valido si hay error al enviar
+        if(status !== undefined) {
+          valido = false
+          msj = 'Ocurrio un error al intentar enviar las alertas al correo.'
+        }
+
+        return {
+          valido,
+          msj
+        }
+      })
+
+      // Retorno mensaje
+      return {
+        success: valido,
+        message: msj
+      }
+      
+    } catch (error) {
+      return {
+        success: false,
+        message: error
+      }
+    }
   }
 }

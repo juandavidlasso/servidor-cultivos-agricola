@@ -35,7 +35,7 @@ module.exports= `
     actualizarLluvia(id_lluvia: Int, input: LluviaInput) : Lluvia
     actualizarUsuario(id_usuario: Int, input: UsuarioInput) : Usuario
     terminarCorte(id_corte: Int, input: CorteInput) : Corte
-    borrarSuerte(id_suerte:Int!) : Response
+    borrarSuerte(id_suerte: Int!) : Response
     eliminarTablon(id_tablon: Int) : Response
     eliminarLabor(id_labor: Int) : Response
     eliminarAphe(id_aphe: Int) : Response
@@ -49,5 +49,6 @@ module.exports= `
     eliminarRiego(id_riego: Int) : Response
     actualizarRiego(id_riego: Int, input: RiegoInput) : Riego
     resetPassword(email: String) : Response
+    enviarAlertas(input: [alertaMensajeInput]) : ResponseMessage
   }
 `
