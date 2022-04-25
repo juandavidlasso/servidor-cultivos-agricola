@@ -253,6 +253,8 @@ module.exports=`
     id_cosecha: Int
     peso: Float
     rendimiento: Float
+    numeroVagones: Int
+    numeroMulas: Int
     corte_id: Int
     cortePadre: Corte
   }
@@ -261,6 +263,8 @@ module.exports=`
     id_cosecha: Int
     peso: Float!
     rendimiento: Float
+    numeroVagones: Int
+    numeroMulas: Int
     corte_id: Int!
   }
 

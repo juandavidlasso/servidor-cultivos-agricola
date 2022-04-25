@@ -13,6 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     rendimiento: {
       type: DataTypes.FLOAT
     },
+    numeroVagones: {
+      type: DataTypes.INTEGER,
+    },
+    numeroMulas: {
+      type: DataTypes.INTEGER,
+    },
     corte_id: {
       type: DataTypes.INTEGER,
       allowNull: false
