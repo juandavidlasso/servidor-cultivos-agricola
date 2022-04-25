@@ -82,6 +82,7 @@ app.listen(PORT, () => {
   return null
 })
 
+
 // developmet
 // const port = process.env.PORT || 8000;
 // app.listen({port: 8000}, () => console.log(`El servidor esta corriendo http://localhost:8000${server.graphqlPath}`))
