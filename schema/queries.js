@@ -45,14 +45,15 @@ module.exports= `
     obtenerMaxRiego(id_corte: Int): Int
     obtenerRiegosCorte(id_corte: Int) : [Riego]
     obtenerDatosActuales(nombres: String): [Corte]
-    obtenerResumenPluviometro: [Pluviometro]
+    obtenerResumenPluviometro(year: Int, numMes: Int): [Pluviometro]
     obtenerResumenAno(year: Int): [Lluvia]
     obtenerAplicacionRiegos(id_riego: Int) : [Tablon]
-    obtenerTotalLluviaActualPluviometro(id_pluviometro: Int) : Float
     obtenerSuertesAsociadas : [Pluviometro]
     obtenerPromedioLluvias(time: Int) : [Lluvia]
     obtenerTotalPluviometros : Int
     obtenerResumenAnoPluviometro(year: Int): [Lluvia]
     obtenerAlertasAplicaciones: [Suerte]
+    obtenerMaquinarias : [Maquinaria]
+    obtenerMaquinaria(idMaquinaria: Int) : Maquinaria
   }
 `

@@ -1,4 +1,4 @@
-const mutations =require('./mutations');
+const mutations = require('./mutations');
 const queries = require('./queries');
 const types = require('./types');
 

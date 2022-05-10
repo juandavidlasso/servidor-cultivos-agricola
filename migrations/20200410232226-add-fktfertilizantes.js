@@ -1,8 +1,9 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.addConstraint('Tratamiento_fertilizantes', ['apfe_id'], {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.addConstraint('Tratamiento_fertilizantes', {
+      fields: ['apfe_id'],
       type: 'foreign key',
       name: 'fk_Idtrafe_apfeId',
       references: { //Required field
@@ -14,7 +15,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.removeConstraint('Tratamiento_fertilizantes','fk_Idtrafe_apfeId')
+  async down(queryInterface, Sequelize) {
+    await queryInterface.removeConstraint('Tratamiento_fertilizantes','fk_Idtrafe_apfeId')
   }
 };

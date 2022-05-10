@@ -1,8 +1,9 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.addConstraint('Tratamiento_herbicidas', ['aphe_id'], {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.addConstraint('Tratamiento_herbicidas', {
+      fields: ['aphe_id'],
       type: 'foreign key',
       name: 'fk_Idtrahe_apheId',
       references: { //Required field
@@ -14,7 +15,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.removeConstraint('Tratamiento_herbicidas','fk_Idtrahe_apheId')
+  async down(queryInterface, Sequelize) {
+    await queryInterface.removeConstraint('Tratamiento_herbicidas','fk_Idtrahe_apheId')
   }
 };

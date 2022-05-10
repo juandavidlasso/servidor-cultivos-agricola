@@ -743,27 +743,49 @@ module.exports= {
     }
   },
   // Resumen pluviometros y lluvias
-  obtenerResumenPluviometro: async(parent, args, {db}, info) => {
+  obtenerResumenPluviometro: async(parent, {year, numMes}, {db}, info) => {
     try {
-      return await db.Pluviometros.findAll({
-        order: [
-          ['nombre', 'ASC']
-        ],
-        attributes: [
-          'id_pluviometro','nombre',
-          [ db.sequelize.literal('(SELECT SUM(cantidad) FROM lluvias WHERE id_pluviometro=pluviometro_id AND MONTH(fecha) = MONTH(NOW()) AND YEAR(fecha) = YEAR(NOW()) GROUP BY pluviometro_id)',),'suertesAsociadas' ]
-        ],
-        include: [{
-          model: db.Lluvias,
-          as: 'listlluvias',
-          required: false,
-          where: {
-            [Op.and]: [
-                db.sequelize.literal('MONTH(fecha) = MONTH(NOW()) AND YEAR(fecha) = YEAR(NOW())')
-            ]
-          }
-        }]
-      })
+      if(!year && !numMes) {
+        return await db.Pluviometros.findAll({
+          order: [
+            ['nombre', 'ASC']
+          ],
+          attributes: [
+            'id_pluviometro','nombre',
+            [ db.sequelize.literal('(SELECT SUM(cantidad) FROM lluvias WHERE id_pluviometro=pluviometro_id AND MONTH(fecha) = MONTH(NOW()) AND YEAR(fecha) = YEAR(NOW()) GROUP BY pluviometro_id)',),'suertesAsociadas' ]
+          ],
+          include: [{
+            model: db.Lluvias,
+            as: 'listlluvias',
+            required: false,
+            where: {
+              [Op.and]: [
+                  db.sequelize.literal('MONTH(fecha) = MONTH(NOW()) AND YEAR(fecha) = YEAR(NOW())')
+              ]
+            }
+          }]
+        })
+      } else {
+        return await db.Pluviometros.findAll({
+          order: [
+            ['nombre', 'ASC']
+          ],
+          attributes: [
+            'id_pluviometro','nombre',
+            [ db.sequelize.literal(`(SELECT SUM(cantidad) FROM lluvias WHERE id_pluviometro=pluviometro_id AND date_format(fecha, '%m') = ${numMes} AND date_format(fecha, '%Y') = ${year} GROUP BY pluviometro_id)`,),'suertesAsociadas' ]
+          ],
+          include: [{
+            model: db.Lluvias,
+            as: 'listlluvias',
+            required: false,
+            where: {
+              [Op.and]: [
+                  db.sequelize.literal(`date_format(fecha, '%m') = ${numMes} AND date_format(fecha, '%Y') = ${year}`)
+              ]
+            }
+          }]
+        })
+      }
     } catch (error) {
       return error
     }
@@ -801,28 +823,13 @@ module.exports= {
       return error
     }
   },
-  // Obtener total lluvia del mes actual de cada pluviometro
-  obtenerTotalLluviaActualPluviometro: async (parent, {id_pluviometro}, {db}, info) => {
-    try {
-      return await db.Lluvias.sum('cantidad', {
-        where: {
-          [Op.and]: [
-            db.sequelize.literal('MONTH(fecha) = MONTH(NOW())')
-          ],
-          pluviometro_id: id_pluviometro
-        }
-      })
-    } catch (error) {
-      return error
-    }
-  },
   // Obtener suertes asociadas de cada pluviometro
   obtenerSuertesAsociadas: async (parent, args, {db}, info) => {
     return await db.Pluviometros.findAll({})
   },
   obtenerPromedioLluvias: async (parent, {time}, {db}, info) => {
     try {
-      return await db.sequelize.query("SELECT id_lluvia, fecha, SUM(cantidad) AS cantidad FROM Lluvias WHERE date_format(fecha, '%Y') = :fecano GROUP BY MONTHNAME(fecha) ORDER BY date_format(fecha, '%m')", {
+      return await db.sequelize.query("SELECT id_lluvia, fecha, SUM(cantidad) AS cantidad FROM Lluvias WHERE date_format(fecha, '%Y') = :fecano AND pluviometro_id <> 74 GROUP BY MONTHNAME(fecha) ORDER BY date_format(fecha, '%m')", {
         replacements: {
           fecano: time
         },
@@ -875,6 +882,22 @@ module.exports= {
           }
         }]
       })
+    } catch (error) {
+      return error
+    }
+  },
+  // Obtener maquinarias
+  obtenerMaquinarias: async (parent, args, {db}, info) => {
+    try {
+      return await db.Maquinarias.findAll()
+    } catch (error) {
+      return error
+    }
+  },
+  // Obtener maquinaria
+  obtenerMaquinaria: async (parent, {idMaquinaria}, {db}, info) => {
+    try {
+      return await db.Maquinarias.findOne({ where: {idMaquinaria} })
     } catch (error) {
       return error
     }

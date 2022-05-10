@@ -1,8 +1,9 @@
 'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.addConstraint('Labores', ['corte_id'], {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.addConstraint('Labores', {
+      fields: ['corte_id'],
       type: 'foreign key',
       name: 'fk_Idlabor_corteId',
       references: { //Required field
@@ -14,7 +15,7 @@ module.exports = {
     });
   },
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.removeConstraint('Labores','fk_Idlabor_corteId')
+  async down(queryInterface, Sequelize) {
+    await queryInterface.removeConstraint('Labores','fk_Idlabor_corteId')
   }
 };

@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
   }, { timestamps: false });
   Labores.associate = function(models) {
     // labores pertenece a un corte
-    Labores.belongsTo(models.Cortes, { foreignKey: 'corte_id' ,onDelete: 'CASCADE'})
+    Labores.belongsTo(models.Cortes, { foreignKey: 'corte_id' , onDelete: 'CASCADE'})
   };
   return Labores;
 };

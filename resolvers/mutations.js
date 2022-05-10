@@ -289,26 +289,6 @@ module.exports= {
       return error    
     }
   },
-  actualizarEmail: async (parent, {id_usuario, input}, {db}, info) => {
-    // actualizar email usuarios
-    const {password} = input
-    const buscarEmail = await db.Usuarios.findOne({ where: {id_usuario} })
-
-    if(!buscarEmail) {
-      throw new Error('No existe')
-    }
-
-    try {
-      // hashear el password
-      const salt = await bcryptjs.genSalt(10)
-      input.password = await bcryptjs.hash(password, salt)
-
-      await buscarEmail.update(input, { where: {id_usuario} })
-      return buscarEmail
-    } catch (error) {
-      return error   
-    }
-  },
   actualizarSuerte: async (parent, {id_suerte, input}, {db}, info) => {
     // actualizar suerte
     const buscarSuerte = await db.Suertes.findOne({ where: {id_suerte} })
@@ -457,21 +437,6 @@ module.exports= {
       return buscarTablon
     } catch (error) {
       return error   
-    }
-  },
-  actualizarPluviometro: async (parent, {id_pluviometro, input}, {db}, info) => {
-    // actualizar pluviometro
-    const buscarPluviometro = await db.Pluviometros.findOne({ where: {id_pluviometro} })
-
-    if(!buscarPluviometro) {
-      throw new Error('No existe')
-    }
-
-    try {
-      await buscarPluviometro.update(input, { where: {id_pluviometro} })
-      return buscarPluviometro
-    } catch (error) {
-      return error  
     }
   },
   actualizarLluvia: async (parent, {id_lluvia, input}, {db}, info) => {
@@ -925,6 +890,15 @@ module.exports= {
         success: false,
         message: error
       }
+    }
+  },
+  // MODULO DE MAQUINARIAS ----------------------------------------------------------------
+  agregarMaquinaria: async (parent, {input}, {db}, info) => {
+    // crear maquinaria
+    try {
+      return await db.Maquinarias.create(input)
+    } catch (error) {
+      return error    
     }
   }
 }

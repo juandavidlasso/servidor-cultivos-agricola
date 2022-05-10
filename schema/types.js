@@ -300,6 +300,24 @@ module.exports=`
     tiempo: String!
   }
 
+  
+  type Maquinaria {
+    idMaquinaria: Int
+    marca: String
+    serie: String
+    modelo: Int
+    potencia: Int
+    color: String
+  }
+
+  input MaquinariaInput {
+    idMaquinaria: Int
+    marca: String
+    serie: String
+    modelo: Int
+    potencia: Int
+    color: String
+  }
 
   type ResponseMessage {
     success: Boolean,
