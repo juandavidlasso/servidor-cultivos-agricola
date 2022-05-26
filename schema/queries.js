@@ -55,5 +55,7 @@ module.exports= `
     obtenerAlertasAplicaciones: [Suerte]
     obtenerMaquinarias : [Maquinaria]
     obtenerMaquinaria(idMaquinaria: Int) : Maquinaria
+    obtenerInsumos : [Insumo]
+    obtenerMantenimiento(idMaquinaria: Int) : [Mantenimiento]
   }
 `

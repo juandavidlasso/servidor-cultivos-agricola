@@ -1,6 +1,8 @@
-const bcryptjs = require('bcryptjs');
-const nodemailer = require('nodemailer');
+const bcryptjs = require('bcryptjs')
+const nodemailer = require('nodemailer')
 const { google } = require('googleapis')
+// const pdf = require('html-pdf')
+const xl = require('excel4node')
 // Generar Token
 require ('dotenv').config();
 
@@ -167,7 +169,6 @@ module.exports= {
       for (let i = 0; i < input.length; i++) {
         await db.Labores.bulkCreate([input[i]])
       }
-      //return await db.Labores.create(input)
     } catch (error) {
       return error   
     } 
@@ -893,12 +894,224 @@ module.exports= {
     }
   },
   // MODULO DE MAQUINARIAS ----------------------------------------------------------------
+  // Crear maquinaria
   agregarMaquinaria: async (parent, {input}, {db}, info) => {
-    // crear maquinaria
     try {
       return await db.Maquinarias.create(input)
     } catch (error) {
       return error    
+    }
+  },
+  // Crear insumo
+  agregarInsumo: async (parent, {input}, {db}, info) => {
+    try {
+      return await db.Insumos.create(input)
+    } catch (error) {
+      return error    
+    }
+  },
+  // Agregar mantenimiento
+  agregarMantenimiento: async (parent, {input}, {db}, info) => {
+    for (let i = 0; i < input.length; i++) {
+      if(input[i].fecha === '' || input[i].horaCambio === '' || input[i].tipoCambio === '' ||
+        input[i].cantidad === '' || input[i].insumoId === '' || input[i].maquinariaId === '') {
+        throw new Error('Debe ingresar todos los datos.')
+      }
+    }
+
+    try {
+      for (let i = 0; i < input.length; i++) {
+        await db.Mantenimientos.bulkCreate([input[i]])
+      }
+    } catch (error) {
+      return error    
+    }
+  },
+  // Generar PDF y enviar por correo
+  enviarInformeCorreo: async (parent, {id_corte, numero, nombreSuerte, area, email, asunto, codigo}, {db}, info) => {
+
+    // Array para llenar id de aplicacion herbicida o fertilizante
+    let array = []
+    // Creo el libro Excel
+    let wb = new xl.Workbook()
+    // Creo hoja de excel
+    let ws = wb.addWorksheet('Hoja1');
+    // Estilos
+    let styleHeader = wb.createStyle({
+      font: {
+        size: 11,
+        color: '#000000',
+        bold: true
+      }
+    })
+    let styleOption = wb.createStyle({
+      font: {
+        size: 11,
+        color: '#000000'
+      }
+    })
+
+    // Celdas de encabezado
+    ws.cell(1,1).string('HACIENDA').style(styleHeader)
+    ws.cell(1,2).string('SUERTE').style(styleHeader)
+    ws.cell(1,3).string('AREA').style(styleHeader)
+    ws.cell(1,4).string('CORTE #').style(styleHeader)
+    ws.cell(1,5).string('PRODUCTO').style(styleHeader)
+    ws.cell(1,6).string('DOSIS').style(styleHeader)
+    ws.cell(1,7).string('UNIDAD').style(styleHeader)
+    ws.cell(1,8).string('CANTIDAD X HTA').style(styleHeader)
+
+    // Width
+    ws.column(1).setWidth(20);
+    ws.column(5).setWidth(20);
+    ws.column(8).setWidth(20);
+
+    // Informacion general
+    ws.cell(2,1).string('STA HELENA').style(styleHeader)
+    ws.cell(2,2).number(nombreSuerte).style(styleHeader)
+    ws.cell(2,3).number(area).style(styleHeader)
+    ws.cell(2,4).number(numero).style(styleHeader)
+
+    //Valido si es informe de herbicidas o fertilizantes
+    if (codigo === 1) {
+
+      // Consulto aplicacion herbicidas del corte actual
+      const data = await db.Aplicacion_herbicidas.findAll({
+        where: {corte_id:id_corte}
+      })
+
+      // Recorro herbicidas y guardo id de cada registro en array
+      for (let index = 0; index < data.length; index++) {
+        array.push(data[index].dataValues.id_aphe)
+      }
+
+      // Consulto tratamiento herbicidas que id coincida
+      const listado = await db.Tratamiento_herbicidas.findAll({
+        where: {
+          aphe_id: array
+        },
+        attributes: [
+          'id_trahe', 'producto', 'dosis', 'presentacion'
+        ]
+      })      
+
+      // Lleno excel con data
+      let pos = 2
+      for (let index = 0; index < listado.length; index++) {
+        ws.cell(pos,5).string( (listado[index].dataValues.producto).toUpperCase() ).style(styleOption)
+        ws.cell(pos,6).number(listado[index].dataValues.dosis).style(styleOption)
+        ws.cell(pos,7).string( (listado[index].dataValues.presentacion).toUpperCase() ).style(styleOption)
+        ws.cell(pos,8).number( (area*listado[index].dataValues.dosis) ).style(styleOption)
+
+        pos++
+      }
+    } else {
+
+      // Consulto aplicacion fertilizantes del corte actual
+      const data = await db.Aplicacion_fertilizantes.findAll({
+        where: {corte_id:id_corte}
+      })
+
+      // Recorro herbicidas y guardo id de cada registro en array
+      for (let index = 0; index < data.length; index++) {
+        array.push(data[index].dataValues.id_apfe)
+      }
+
+      // Consulto tratamiento herbicidas que id coincida
+      const listado = await db.Tratamiento_fertilizantes.findAll({
+        where: {
+          apfe_id: array
+        },
+        attributes: [
+          'id_trafe', 'producto', 'dosis', 'presentacion'
+        ]
+      })      
+
+      // Lleno excel con data
+      let pos = 2
+      for (let index = 0; index < listado.length; index++) {
+        ws.cell(pos,5).string( (listado[index].dataValues.producto).toUpperCase() ).style(styleOption)
+        ws.cell(pos,6).number(listado[index].dataValues.dosis).style(styleOption)
+        ws.cell(pos,7).string( (listado[index].dataValues.presentacion).toUpperCase() ).style(styleOption)
+        ws.cell(pos,8).number( (area*listado[index].dataValues.dosis) ).style(styleOption)
+
+        pos++
+      }
+    }
+
+
+    // credenciales del servicio de google apis
+    const CLIENT_ID = "617673617796-t6up0ufq0pvpdfh746gjn6o3308ujmmj.apps.googleusercontent.com"
+    const CLIENT_SECRET = "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"
+    const REDIRECT_URI = "https://developers.google.com/oauthplayground"
+    const REFRESH_TOKEN = "1//04fBSGHbgiGZACgYIARAAGAQSNwF-L9IrISqn2YzlmUTQgfcR_S0s4cA2bgOarwqyuPTYjPoci934JDQLJddsbJpnEk4_xmwYWZo"
+    
+    const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
+
+    oAuth2Client.setCredentials({
+      refresh_token: REFRESH_TOKEN
+    })
+
+    // funcion para enviar el correo
+    async function sendMail(file) {
+      const getAccessToken = await oAuth2Client.getAccessToken()
+
+      const transport = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          type: "OAuth2",
+          user: "solucionesgdsystem@gmail.com",
+          clientId: CLIENT_ID,
+          clientSecret: CLIENT_SECRET,
+          refreshToken: REFRESH_TOKEN,
+          accessToken: getAccessToken
+        },
+        tls:{
+          rejectUnauthorized: false
+        }
+      })
+      const mailOptions = {
+        from: "Soporte Agrícola <solucionesgdsystem@gmail.com>",
+        to: `${email}`,
+        subject: `${asunto}`,
+        attachments: [
+          { filename: 'Informe.xlsx', content: file, contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
+        ]
+      }
+
+      const result = await transport.sendMail(mailOptions)
+
+      return result
+    }
+
+    let suc
+    let mesg
+    
+    try {
+      await wb.writeToBuffer().then( async function(buffer) {
+        await sendMail(buffer).then( async (res) => {
+          if (!res.accepted[0]) {
+            suc =  false,
+            mesg = 'El informe no se pudo enviar, intente de nuevo en unos minutos'
+          } else {
+            suc = true,
+            mesg = 'El informe se envió exitosamente'
+          }
+        });
+
+        return {
+          suc,
+          mesg
+        }
+
+      })
+
+      return {
+        success: suc,
+        message: mesg
+      }
+    } catch (error) {
+      return error
     }
   }
 }

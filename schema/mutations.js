@@ -49,5 +49,8 @@ module.exports= `
     resetPassword(email: String) : Response
     enviarAlertas(input: [alertaMensajeInput]) : ResponseMessage
     agregarMaquinaria(input: MaquinariaInput) : Maquinaria
+    agregarInsumo(input: InsumoInput) : Insumo
+    agregarMantenimiento(input: [MantenimientoInput]) : Response
+    enviarInformeCorreo(id_corte: Int, numero: Int, nombreSuerte: Int, area: Int, email: String, asunto: String, codigo: Int) : ResponseMessage
   }
 `

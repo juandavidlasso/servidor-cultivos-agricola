@@ -14,7 +14,7 @@ module.exports = {
       },
       detalle: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       horaCambio: {
         type: Sequelize.STRING,

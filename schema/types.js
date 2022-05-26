@@ -319,6 +319,50 @@ module.exports=`
     color: String
   }
 
+
+  type Insumo {
+    idInsumo: Int
+    nombre: String
+    referencia: String
+    marca: String
+    cantidad: String
+  }
+
+  input InsumoInput {
+    idInsumo: Int
+    nombre: String
+    referencia: String
+    marca: String
+    cantidad: String
+  }
+
+
+  type Mantenimiento {
+    idMantenimiento: Int
+    fecha: String
+    detalle: String
+    horaCambio: String
+    tipoCambio: Boolean
+    proximoCambio: Int
+    cantidad: String
+    insumoId: Int
+    maquinariaId: Int
+    insumoPadre: Insumo
+  }
+
+  input MantenimientoInput {
+    idMantenimiento: Int
+    fecha: String
+    detalle: String
+    horaCambio: String
+    tipoCambio: Boolean
+    proximoCambio: Int
+    cantidad: String
+    insumoId: Int
+    maquinariaId: Int
+  }
+
+
   type ResponseMessage {
     success: Boolean,
     message: String

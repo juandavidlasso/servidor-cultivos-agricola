@@ -2,13 +2,8 @@
 const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Mantenimientos extends Model {
-    /**
-     * Helper method for defining associations.
-     * This method is not a part of Sequelize lifecycle.
-     * The `models/index` file will call this method automatically.
-     */
     static associate(models) {
-      Mantenimientos.belongsTo(models.Insumos, { foreignKey: 'insumoId', onDelete: 'CASCADE' })
+      Mantenimientos.belongsTo(models.Insumos, { as: 'insumoPadre', foreignKey: 'insumoId', onDelete: 'CASCADE' })
       Mantenimientos.belongsTo(models.Maquinarias, { foreignKey: 'maquinariaId', onDelete: 'CASCADE' })
     }
   }
@@ -24,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     detalle: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     horaCambio: {
       type: DataTypes.STRING,
@@ -42,6 +37,14 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
+    tipoCambio: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false
+    },
+    proximoCambio: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, { sequelize, modelName: 'Mantenimientos', timestamps: false });
   return Mantenimientos;
 };

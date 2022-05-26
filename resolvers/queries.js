@@ -901,5 +901,32 @@ module.exports= {
     } catch (error) {
       return error
     }
+  },
+  // Obtener insumos
+  obtenerInsumos: async (parent, args, {db}, info) => {
+    try {
+      return await db.Insumos.findAll()
+    } catch (error) {
+      return error
+    }
+  },
+  // Obtener mantenimientos de una maquinaria
+  obtenerMantenimiento: async (parent, {idMaquinaria}, {db}, info) => {
+    try {
+      return await db.Mantenimientos.findAll({
+        attributes: [
+          'idMantenimiento', 'fecha', 'detalle', 'horaCambio', 'tipoCambio', 'cantidad', 'proximoCambio'
+        ],
+        where: {maquinariaId: idMaquinaria },
+        include: [{
+          model: db.Insumos,
+          as: 'insumoPadre',
+          required: true,
+          attributes: ['idInsumo', 'nombre']
+        }]
+      })
+    } catch (error) {
+      return error
+    }
   }
 }

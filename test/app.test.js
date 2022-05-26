@@ -34,80 +34,84 @@ register(['.css', '.sass', '.scss']);
 var authToken;
 
 describe('Acceso a servidor no autorizado', function() {
- it('Pagina prohibida', function(done) {
- request('http://localhost:8000', function(err, res, body) {
- should.not.exist(err);
- should.exist(res);
- expect(res.statusCode).to.be.equal(200);
- assert.ok(body.indexOf('Pagina no accesible, ingrese a http://localhost:3000') !== -1);
- done(err);
- });
- });
+  it('Pagina prohibida', function(done) {
+    request('http://localhost:8000', function(err, res, body) {
+      should.not.exist(err);
+      should.exist(res);
+      expect(res.statusCode).to.be.equal(200);
+      assert.ok(body.indexOf('Pagina no accesible, ingrese a http://localhost:3000') !== -1);
+      done(err);
+    });
+  });
 });
+
 describe('Acceso a servicio graphql no autorizado', function() {   
- it('Pagina prohibida', function(done) {
- request('http://localhost:8000/graphql', function(err, res, body) {
- should.not.exist(err);
- should.exist(res);
- expect(res.statusCode).to.be.equal(200);
- assert.ok(body.indexOf('Pagina no accesible, ingrese a http://localhost:3000') !== -1);
- done(err);
- });
- });
+  it('Pagina prohibida', function(done) {
+    request('http://localhost:8000/graphql', function(err, res, body) {
+      should.not.exist(err);
+      should.exist(res);
+      expect(res.statusCode).to.be.equal(200);
+      assert.ok(body.indexOf('Pagina no accesible, ingrese a http://localhost:3000') !== -1);
+      done(err);
+    });
+  });
 });
 
 describe('Acceso a la aplicación web ', function() {    
-    //funcrs and serves the index pageion it inicia la prueba
- it('Renderizado de la pagina web', function(done) {
- request('http://localhost:3000', function(err, res, body) {
- should.not.exist(err);
- should.exist(res);
- expect(res.statusCode).to.be.equal(200);
- assert.ok(body.indexOf('<html') !== -1);
- done(err);
- });
- });
-});
-describe('Autenticación', function() {
-    
-    it('Intento de login sin hacer uso de la aplicación web', function(done) {
-        const json = {
-          operationName: null,
-          query: "mutation autenticarUsuario($input: AutenticarInput) { autenticarUsuario(input: $input) { token }}",
-          variables: {
-            "input":{
-            "email": "administrador@gmail.com",
-            "password": "andres"
-            }
-          }
-        };
-      
-        request.post({
-          url: 'http://localhost:8000/graphql',
-          json: json,
-        }, function(err, res, body) {
-          should.not.exist(err);
-          should.exist(res);
-          expect(res.statusCode).to.be.equal(200);
-          //formato del body devuelto, debe ser object
-          body.should.be.an('object');
-          //comprobar si hay una propiedad de data dentro del object
-          body.should.have.property('data');
-          //atrapar token
-          authToken = body.data.autenticarUsuario.token;
-          done(err);
-        });
+  //funcrs and serves the index pageion it inicia la prueba
+  it('Renderizado de la pagina web', function(done) {
+    request('http://localhost:3000', function(err, res, body) {
+      should.not.exist(err);
+      should.exist(res);
+      expect(res.statusCode).to.be.equal(200);
+      assert.ok(body.indexOf('<html') !== -1);
+      done(err);
     });
-    it('Intento de consultas de suertes sin hacer uso de la aplicacion web', function(done) {
-        const json = {
-        operationName: null,
-        query: "query {obtenerSuertes {id_suerte,nombre,area}}",
-        variables: {}
-        };
-        request.post({
-        url: 'http://localhost:8000/graphql',
-        json: json,
-        }, function(err, res, body) {
+  });
+});
+
+
+describe('Autenticación', function() {
+  it('Intento de login sin hacer uso de la aplicación web', function(done) {
+    const json = {
+      operationName: null,
+      query: "mutation autenticarUsuario($input: AutenticarInput) { autenticarUsuario(input: $input) { token }}",
+      variables: {
+        "input":{
+          "email": "administrador@gmail.com",
+          "password": "andres"
+        }
+      }
+    };
+      
+    request.post({
+      url: 'http://localhost:8000/graphql',
+      json: json,
+    }, function(err, res, body) {
+        should.not.exist(err);
+        should.exist(res);
+        expect(res.statusCode).to.be.equal(200);
+        //formato del body devuelto, debe ser object
+        body.should.be.an('object');
+        //comprobar si hay una propiedad de data dentro del object
+        body.should.have.property('data');
+        //atrapar token
+        authToken = body.data.autenticarUsuario.token;
+        done(err);
+      });
+  });
+  
+  it('Intento de consultas de suertes sin hacer uso de la aplicacion web', function(done) {
+    const json = {
+      operationName: null,
+      query: "query {obtenerSuertes {id_suerte,nombre,area}}",
+      variables: {}
+    };
+    
+    request.post({
+      url: 'http://localhost:8000/graphql',
+      json: json,
+    }, function(err, res, body) {
         should.not.exist(err);
         should.exist(res);
         expect(res.statusCode).to.be.equal(200);
@@ -116,6 +120,7 @@ describe('Autenticación', function() {
         //verificar la longitud del campo, para comprobar que es una matriz
         body.data.should.have.property('obtenerSuertes').with.lengthOf(7);
         done(err);
-        });
-       });
+      }
+    )
+  });
 });
