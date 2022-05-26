@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize')
 const Op = Sequelize.Op
-const { QueryTypes, where } = require('sequelize')
+const { QueryTypes } = require('sequelize')
 
 module.exports= {
   obtenerUsuario: async (parent, {}, ctx, info) => {
