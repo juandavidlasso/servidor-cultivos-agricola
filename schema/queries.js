@@ -57,5 +57,6 @@ module.exports= `
     obtenerMaquinaria(idMaquinaria: Int) : Maquinaria
     obtenerInsumos : [Insumo]
     obtenerMantenimiento(idMaquinaria: Int) : [Mantenimiento]
+    obtenerInformeVonsucro: [Suerte]
   }
 `

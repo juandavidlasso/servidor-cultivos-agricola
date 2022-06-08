@@ -79,6 +79,8 @@ module.exports=`
     listcosechas: [Cosecha]
     listTablones: [Tablon]
     suertePadre: Suerte
+    listAplicacionHerbicida: [AplicacionHerbicidas]
+    listAplicacionFertilizante: [AplicacionFertilizantes]
   }
 
   input CorteInput {
@@ -123,6 +125,7 @@ module.exports=`
     fecha: String
     tipo: String
     corte_id: Int
+    listTratamientoHerbicida: [TratamientoHerbicidas]
   }
 
   input AplicacionHerbicidasInput {
@@ -160,6 +163,7 @@ module.exports=`
     fecha: String
     tipo: String
     corte_id: Int
+    listTratamientoFertilizante: [TratamientoFertilizantes]
   }
 
   input AplicacionFertilizantesInput {
@@ -376,6 +380,19 @@ module.exports=`
   input alertaMensajeInput {
     suerte: String,
     mensaje: String
+  }
+
+
+  input informeVonsucro {
+    area: Float
+    corte: Int
+    dosis: Float
+    id_trafe: Int
+    id_trahe: Int
+    identificador: Int
+    presentacion: String
+    producto: String
+    suerte: String
   }
 `
 

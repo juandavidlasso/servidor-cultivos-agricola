@@ -9,7 +9,6 @@ module.exports= {
   // Listado de suertes
   obtenerSuertesRenovadas: async (parent, args, {db}, info) => {
     try {
-      //return db.Suertes.findAll({where:{renovada:'SI'}, order:[ ['nombre', 'ASC'] + 0,['nombre', 'ASC'] ]}); 
       return await db.sequelize.query(`select id_suerte, nombre, area, variedad, zona, renovada, createdAt, updatedAt from suertes where renovada='SI' order by nombre + 0, nombre`, { type: QueryTypes.SELECT}); 
     } catch (error) {
       return error
@@ -31,13 +30,6 @@ module.exports= {
       return error
     }
   },
-  // obtenerSuertes: async (parent, args, {db}, info) => {
-  //   try {
-  //     return await db.Suertes.findAll()
-  //   } catch (error) {
-  //     return null
-  //   } 
-  // },
   // consulta cada suerte
   obtenerSuerte: async (parent, {id_suerte}, {db}, info) => {
     try {
@@ -886,6 +878,54 @@ module.exports= {
       return error
     }
   },
+  obtenerInformeVonsucro: async (parent, args, {db}, info) => {
+    try {
+      return await db.Suertes.findAll({
+        attributes: ['id_suerte', 'nombre', 'renovada',
+        [ db.sequelize.literal('(SELECT SUM(area) FROM tablones WHERE id_corte=corte_id AND id_suerte=suerte_id AND activo=true)',),'area' ]
+      ],
+        order: [
+          ['nombre', 'ASC']
+        ],
+        where: { renovada: 'SI' },
+        include:[{
+          model: db.Cortes,
+          as: 'listcortes',
+          attributes: ['id_corte', 'numero'
+          // [ db.sequelize.literal('(SELECT SUM(area) FROM tablones WHERE id_corte=corte_id AND activo=true)',),'area' ]
+        ],
+          where: {
+              activo: true
+          },
+          include: [
+            {
+              model: db.Aplicacion_herbicidas,
+              as: 'listAplicacionHerbicida',
+              attributes: ['id_aphe', 'tipo', 'fecha'],
+              include: [{
+                model: db.Tratamiento_herbicidas,
+                as: 'listTratamientoHerbicida',
+                attributes: ['id_trahe', 'producto', 'dosis', 'presentacion']
+              }]
+            },
+            {
+              model: db.Aplicacion_fertilizantes,
+              as: 'listAplicacionFertilizante',
+              attributes: ['id_apfe', 'tipo', 'fecha'],
+              include: [{
+                model: db.Tratamiento_fertilizantes,
+                as: 'listTratamientoFertilizante',
+                attributes: ['id_trafe', 'producto', 'dosis', 'presentacion']
+              }]
+            }
+          ]
+        }]
+      })
+    } catch (error) {
+      return error
+    }
+  },
+  // Modulo maquinaria
   // Obtener maquinarias
   obtenerMaquinarias: async (parent, args, {db}, info) => {
     try {

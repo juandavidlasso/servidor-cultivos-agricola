@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     // aplicacion herbicidas pertenece a un corte
     Aplicacion_herbicidas.belongsTo(models.Cortes, { foreignKey: 'corte_id', onDelete: 'CASCADE' } )
     // aplicacion herbicidas tiene muchos tratamientos herbicidas
-    Aplicacion_herbicidas.hasMany(models.Tratamiento_herbicidas, { foreignKey: 'aphe_id', onDelete: 'CASCADE' } )
+    Aplicacion_herbicidas.hasMany(models.Tratamiento_herbicidas, { as: 'listTratamientoHerbicida', foreignKey: 'aphe_id', onDelete: 'CASCADE' } )
   };
   return Aplicacion_herbicidas;
 };

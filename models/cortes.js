@@ -43,13 +43,13 @@ module.exports = (sequelize, DataTypes) => {
     // corte tiene muchas aplicaciones plagas
     Cortes.hasMany(models.Aplicacion_plagas, { foreignKey: 'corte_id' })
     // corte tiene muchss aplicaciones fertilizantes
-    Cortes.hasMany(models.Aplicacion_fertilizantes, { foreignKey: 'corte_id' })
+    Cortes.hasMany(models.Aplicacion_fertilizantes, { as: 'listAplicacionFertilizante', foreignKey: 'corte_id' })
     // corte tiene muchas labores
     Cortes.hasMany(models.Labores, { foreignKey: 'corte_id' })
     // corte tiene muchas cosechas
     Cortes.hasMany(models.Cosechas, { as: 'listcosechas', foreignKey: 'corte_id' })
     // corte tiene muchas aplicaciones herbicidas
-    Cortes.hasMany(models.Aplicacion_herbicidas, { foreignKey: 'corte_id' })
+    Cortes.hasMany(models.Aplicacion_herbicidas, { as: 'listAplicacionHerbicida', foreignKey: 'corte_id' })
     // corte tiene muchos tablones
     Cortes.hasMany(models.Tablones, { as: 'listTablones', foreignKey: 'corte_id' })
     // corte tiene muchos riegos

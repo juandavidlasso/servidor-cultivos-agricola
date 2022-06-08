@@ -928,115 +928,109 @@ module.exports= {
     }
   },
   // Generar PDF y enviar por correo
-  enviarInformeCorreo: async (parent, {id_corte, numero, nombreSuerte, area, email, asunto, codigo}, {db}, info) => {
+  enviarInformeCorreo: async (parent, {input, email, asunto}, {db}, info) => {
 
-    // Array para llenar id de aplicacion herbicida o fertilizante
-    let array = []
+    let result = input.reduce((acc,cur) => {
+      let { suerte, area, corte, ...rest } = cur;
+      let ex = acc.find(x => x.suerte === suerte);
+      if(!ex){
+         ex = { suerte, area, corte, tratamientos: [] };
+         acc.push(ex);
+      }
+      ex.tratamientos.push(rest);
+      return acc;
+    }, [])
+
     // Creo el libro Excel
     let wb = new xl.Workbook()
     // Creo hoja de excel
     let ws = wb.addWorksheet('Hoja1');
     // Estilos
     let styleHeader = wb.createStyle({
+      fill: {
+        type: 'pattern',
+        patternType: 'solid',
+        bgColor: '#F1A399',
+        fgColor: '#F1A399'
+      },
       font: {
         size: 11,
         color: '#000000',
         bold: true
       }
     })
-    let styleOption = wb.createStyle({
+    let styleHeaderE = wb.createStyle({
+      font: {
+        size: 11,
+        color: '#000000',
+        bold: true
+      }
+    })
+    let styleOptionH = wb.createStyle({
+      fill: {
+        type: 'pattern',
+        patternType: 'solid',
+        bgColor: '#C6E0B4',
+        fgColor: '#C6E0B4'
+      },
+      font: {
+        size: 11,
+        color: '#000000'
+      }
+    })
+    let styleOptionF = wb.createStyle({
+      fill: {
+        type: 'pattern',
+        patternType: 'solid',
+        bgColor: '#BDD7EE',
+        fgColor: '#BDD7EE'
+      },
       font: {
         size: 11,
         color: '#000000'
       }
     })
 
-    // Celdas de encabezado
-    ws.cell(1,1).string('HACIENDA').style(styleHeader)
-    ws.cell(1,2).string('SUERTE').style(styleHeader)
-    ws.cell(1,3).string('AREA').style(styleHeader)
-    ws.cell(1,4).string('CORTE #').style(styleHeader)
-    ws.cell(1,5).string('PRODUCTO').style(styleHeader)
-    ws.cell(1,6).string('DOSIS').style(styleHeader)
-    ws.cell(1,7).string('UNIDAD').style(styleHeader)
-    ws.cell(1,8).string('CANTIDAD X HTA').style(styleHeader)
+    // Recorro array para crear Excel
+    let pos = 1
+    for (let index = 0; index < result.length; index++) {
+      // Celdas de encabezado
+      ws.cell(pos,1).string('HACIENDA').style(styleHeader)
+      ws.cell(pos,2).string('SUERTE').style(styleHeader)
+      ws.cell(pos,3).string('AREA').style(styleHeader)
+      ws.cell(pos,4).string('CORTE #').style(styleHeader)
+      ws.cell(pos,5).string('PRODUCTO').style(styleHeader)
+      ws.cell(pos,6).string('DOSIS').style(styleHeader)
+      ws.cell(pos,7).string('UNIDAD').style(styleHeader)
+      ws.cell(pos,8).string('CANTIDAD X HTA').style(styleHeader)
+      ws.cell(pos,9).string('TRATAMIENTO').style(styleHeader)
 
-    // Width
-    ws.column(1).setWidth(20);
-    ws.column(5).setWidth(20);
-    ws.column(8).setWidth(20);
+      // Width
+      ws.column(1).setWidth(20);
+      ws.column(5).setWidth(20);
+      ws.column(8).setWidth(20);
+      ws.column(9).setWidth(20);
 
-    // Informacion general
-    ws.cell(2,1).string('STA HELENA').style(styleHeader)
-    ws.cell(2,2).number(nombreSuerte).style(styleHeader)
-    ws.cell(2,3).number(area).style(styleHeader)
-    ws.cell(2,4).number(numero).style(styleHeader)
+      // Aumento pos para bajar de la cabecera
+      pos++
+      // Informacion data
+      ws.cell(pos,1).string('STA HELENA').style(styleHeaderE)
+      ws.cell(pos,2).string( result[index].suerte ).style(styleHeaderE)
+      ws.cell(pos,3).number( result[index].area ).style(styleHeaderE)
+      ws.cell(pos,4).number( result[index].corte ).style(styleHeaderE)
 
-    //Valido si es informe de herbicidas o fertilizantes
-    if (codigo === 1) {
-
-      // Consulto aplicacion herbicidas del corte actual
-      const data = await db.Aplicacion_herbicidas.findAll({
-        where: {corte_id:id_corte}
-      })
-
-      // Recorro herbicidas y guardo id de cada registro en array
-      for (let index = 0; index < data.length; index++) {
-        array.push(data[index].dataValues.id_aphe)
-      }
-
-      // Consulto tratamiento herbicidas que id coincida
-      const listado = await db.Tratamiento_herbicidas.findAll({
-        where: {
-          aphe_id: array
-        },
-        attributes: [
-          'id_trahe', 'producto', 'dosis', 'presentacion'
-        ]
-      })      
-
-      // Lleno excel con data
-      let pos = 2
-      for (let index = 0; index < listado.length; index++) {
-        ws.cell(pos,5).string( (listado[index].dataValues.producto).toUpperCase() ).style(styleOption)
-        ws.cell(pos,6).number(listado[index].dataValues.dosis).style(styleOption)
-        ws.cell(pos,7).string( (listado[index].dataValues.presentacion).toUpperCase() ).style(styleOption)
-        ws.cell(pos,8).number( (area*listado[index].dataValues.dosis) ).style(styleOption)
+      for (let i = 0; i < result[index].tratamientos.length; i++) {
+        // Productos herbicidas y fertilizantes
+        ws.cell(pos,5).string( (result[index].tratamientos[i].producto).toUpperCase() ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
+        ws.cell(pos,6).number( (result[index].tratamientos[i].dosis) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
+        ws.cell(pos,7).string( (result[index].tratamientos[i].presentacion).toUpperCase() ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
+        ws.cell(pos,8).number( (result[index].area * result[index].tratamientos[i].dosis) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
+        ws.cell(pos,9).string( (result[index].tratamientos[i].identificador === 1 ? 'HERBICIDAS' : 'FERTILIZANTES' ) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
 
         pos++
       }
-    } else {
 
-      // Consulto aplicacion fertilizantes del corte actual
-      const data = await db.Aplicacion_fertilizantes.findAll({
-        where: {corte_id:id_corte}
-      })
-
-      // Recorro herbicidas y guardo id de cada registro en array
-      for (let index = 0; index < data.length; index++) {
-        array.push(data[index].dataValues.id_apfe)
-      }
-
-      // Consulto tratamiento herbicidas que id coincida
-      const listado = await db.Tratamiento_fertilizantes.findAll({
-        where: {
-          apfe_id: array
-        },
-        attributes: [
-          'id_trafe', 'producto', 'dosis', 'presentacion'
-        ]
-      })      
-
-      // Lleno excel con data
-      let pos = 2
-      for (let index = 0; index < listado.length; index++) {
-        ws.cell(pos,5).string( (listado[index].dataValues.producto).toUpperCase() ).style(styleOption)
-        ws.cell(pos,6).number(listado[index].dataValues.dosis).style(styleOption)
-        ws.cell(pos,7).string( (listado[index].dataValues.presentacion).toUpperCase() ).style(styleOption)
-        ws.cell(pos,8).number( (area*listado[index].dataValues.dosis) ).style(styleOption)
-
-        pos++
-      }
+      pos += 3
     }
 
 
@@ -1072,8 +1066,8 @@ module.exports= {
       })
       const mailOptions = {
         from: "Soporte Agrícola <solucionesgdsystem@gmail.com>",
-        to: `${email}`,
-        subject: `${asunto}`,
+        to: email,
+        subject: asunto,
         attachments: [
           { filename: 'Informe.xlsx', content: file, contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }
         ]
