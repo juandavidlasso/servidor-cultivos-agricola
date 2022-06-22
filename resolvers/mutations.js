@@ -927,6 +927,56 @@ module.exports= {
       return error    
     }
   },
+  // Agregar aplicacion mantenimiento
+  agregarAplicacionMantenimiento: async (pareent, {input}, {db}, info) => {
+    try {
+      return await db.Aplicacion_mantenimientos.create(input)
+    } catch (error) {
+      return error    
+    }
+  },
+  // Edita aplicacion mantenimiento
+  editarAplicacionMantenimiento: async (parent, {idApMant, input}, {db}, info) => {
+    // Busco la aplicacion mantenimiento
+    const aplMantenimiento = await db.Aplicacion_mantenimientos.findOne({ where: {idApMant} })
+
+    if(!aplMantenimiento) {
+      throw new Error ('No existe')
+    }
+
+    try {
+      await aplMantenimiento.update(input, {where: {idApMant}} )
+      return aplMantenimiento
+    } catch (error) {
+      return error   
+    }
+  },
+  // Eliminar aplicacion mantenimiento
+  eliminarAplicacionMantenimiento: async (parent, {idApMant}, {db}, info) => {
+    // busco si existe la labor
+    const aplMant = await db.Aplicacion_mantenimientos.findOne({ where: idApMant })
+  
+    if(!aplMant) throw new Error('No existe')
+  
+    try {
+      return await aplMant.destroy()
+    } catch (error) {
+      return error
+    }
+  },
+  // Eliminar mantenimiento lista
+  eliminarListaMantenimiento: async (parent, {idMantenimiento}, {db}, info) => {
+    // busco el lista mantenimiento
+    const listMantenimiento = await db.Mantenimientos.findOne({ where: idMantenimiento })
+
+    if (!listMantenimiento) throw new Error('No Existe')
+
+    try {
+      return await listMantenimiento.destroy()
+    } catch (error) {
+      return error
+    }
+  },
   // Generar PDF y enviar por correo
   enviarInformeCorreo: async (parent, {input, email, asunto}, {db}, info) => {
 
@@ -978,6 +1028,21 @@ module.exports= {
         color: '#000000'
       }
     })
+    let styleOptionHC = wb.createStyle({
+      fill: {
+        type: 'pattern',
+        patternType: 'solid',
+        bgColor: '#C6E0B4',
+        fgColor: '#C6E0B4'
+      },
+      font: {
+        size: 11,
+        color: '#000000'
+      },
+      alignment: {
+        horizontal: ['center']
+      }
+    })
     let styleOptionF = wb.createStyle({
       fill: {
         type: 'pattern',
@@ -988,6 +1053,21 @@ module.exports= {
       font: {
         size: 11,
         color: '#000000'
+      }
+    })
+    let styleOptionFC = wb.createStyle({
+      fill: {
+        type: 'pattern',
+        patternType: 'solid',
+        bgColor: '#BDD7EE',
+        fgColor: '#BDD7EE'
+      },
+      font: {
+        size: 11,
+        color: '#000000'
+      },
+      alignment: {
+        horizontal: ['center']
       }
     })
 
@@ -1021,10 +1101,12 @@ module.exports= {
 
       for (let i = 0; i < result[index].tratamientos.length; i++) {
         // Productos herbicidas y fertilizantes
+        let cantidad = (result[index].area * result[index].tratamientos[i].dosis).toFixed(0)
+        let cantXHta = Number(cantidad)
         ws.cell(pos,5).string( (result[index].tratamientos[i].producto).toUpperCase() ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
-        ws.cell(pos,6).number( (result[index].tratamientos[i].dosis) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
-        ws.cell(pos,7).string( (result[index].tratamientos[i].presentacion).toUpperCase() ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
-        ws.cell(pos,8).number( (result[index].area * result[index].tratamientos[i].dosis) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
+        ws.cell(pos,6).number( (result[index].tratamientos[i].dosis) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionHC : styleOptionFC )
+        ws.cell(pos,7).string( (result[index].tratamientos[i].presentacion).toUpperCase() ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionHC : styleOptionFC )
+        ws.cell(pos,8).number( (cantXHta) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionHC : styleOptionFC )
         ws.cell(pos,9).string( (result[index].tratamientos[i].identificador === 1 ? 'HERBICIDAS' : 'FERTILIZANTES' ) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
 
         pos++

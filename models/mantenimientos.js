@@ -4,7 +4,7 @@ module.exports = (sequelize, DataTypes) => {
   class Mantenimientos extends Model {
     static associate(models) {
       Mantenimientos.belongsTo(models.Insumos, { as: 'insumoPadre', foreignKey: 'insumoId', onDelete: 'CASCADE' })
-      Mantenimientos.belongsTo(models.Maquinarias, { foreignKey: 'maquinariaId', onDelete: 'CASCADE' })
+      Mantenimientos.belongsTo(models.Aplicacion_mantenimientos, { foreignKey: 'ApMantId', onDelete: 'CASCADE' })
     }
   }
   Mantenimientos.init({
@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false
     },
-    maquinariaId: {
+    ApMantId: {
       type: DataTypes.INTEGER,
       allowNull: false
     },

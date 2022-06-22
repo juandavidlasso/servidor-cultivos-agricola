@@ -953,18 +953,28 @@ module.exports= {
   // Obtener mantenimientos de una maquinaria
   obtenerMantenimiento: async (parent, {idMaquinaria}, {db}, info) => {
     try {
-      return await db.Mantenimientos.findAll({
-        attributes: [
-          'idMantenimiento', 'fecha', 'detalle', 'horaCambio', 'tipoCambio', 'cantidad', 'proximoCambio'
-        ],
+      return await db.Aplicacion_mantenimientos.findAll({
         where: {maquinariaId: idMaquinaria },
         include: [{
-          model: db.Insumos,
-          as: 'insumoPadre',
-          required: true,
-          attributes: ['idInsumo', 'nombre']
+          model: db.Mantenimientos,
+          as: 'listMantenimientos',
+          required: false,
+          include: [{
+            model: db.Insumos,
+            as: 'insumoPadre',
+            required: true,
+            attributes: ['idInsumo', 'nombre']
+          }]
         }]
       })
+    } catch (error) {
+      return error
+    }
+  },
+  // Obtener Aplicacion mantenimiento
+  obtenerAplicacionMantenimiento: async (parent, {idApMant}, {db}, info) => {
+    try {
+      return await db.Aplicacion_mantenimientos.findOne({ where: {idApMant } })
     } catch (error) {
       return error
     }

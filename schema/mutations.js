@@ -51,6 +51,10 @@ module.exports= `
     agregarMaquinaria(input: MaquinariaInput) : Maquinaria
     agregarInsumo(input: InsumoInput) : Insumo
     agregarMantenimiento(input: [MantenimientoInput]) : Response
+    agregarAplicacionMantenimiento(input: AplicacionMantenimientoInput) : AplicacionMantenimiento
+    editarAplicacionMantenimiento(idApMant: Int, input: AplicacionMantenimientoInput) : AplicacionMantenimiento
+    eliminarAplicacionMantenimiento(idApMant: Int) : Response
+    eliminarListaMantenimiento(idMantenimiento: Int) : Response
     enviarInformeCorreo(input: [informeVonsucro], email: String, asunto: String) : ResponseMessage
   }
 `

@@ -3,7 +3,7 @@ const { Model } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
   class Maquinarias extends Model {
     static associate(models) {
-      Maquinarias.hasMany(models.Mantenimientos, { as: 'listMantenimientos', foreignKey: 'maquinariaId', onDelete: 'CASCADE'})
+      Maquinarias.hasMany(models.Aplicacion_mantenimientos, { foreignKey: 'maquinariaId', onDelete: 'CASCADE'})
     }
   }
   Maquinarias.init({

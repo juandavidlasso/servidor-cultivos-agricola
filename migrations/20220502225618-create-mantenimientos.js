@@ -28,7 +28,7 @@ module.exports = {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      maquinariaId: {
+      ApMantId: {
         type: Sequelize.INTEGER,
         allowNull: false,
       }

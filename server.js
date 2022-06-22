@@ -12,8 +12,8 @@ dotenv.config({path: 'variables.env'})
 // Options cors
 var cors = require('cors')
 var corsOptions = {
-  // origin: 'https://cliente-agricola.vercel.app',
-  origin: 'http://localhost:3000',
+  origin: 'https://cliente-agricola.vercel.app',
+  // origin: 'http://localhost:3000',
   optionsSuccessStatus: 200
 }
 

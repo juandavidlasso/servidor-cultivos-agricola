@@ -350,7 +350,7 @@ module.exports=`
     proximoCambio: Int
     cantidad: String
     insumoId: Int
-    maquinariaId: Int
+    ApMantId: Int
     insumoPadre: Insumo
   }
 
@@ -363,6 +363,23 @@ module.exports=`
     proximoCambio: Int
     cantidad: String
     insumoId: Int
+    ApMantId: Int
+  }
+
+
+  type AplicacionMantenimiento {
+    idApMant: Int
+    fecha: String
+    nombre: String
+    maquinariaId: Int
+    listMantenimientos: [Mantenimiento]
+  }
+
+
+  input AplicacionMantenimientoInput {
+    idApMant: Int
+    fecha: String
+    nombre: String
     maquinariaId: Int
   }
 
