@@ -878,7 +878,7 @@ module.exports= {
       return error
     }
   },
-  obtenerInformeVonsucro: async (parent, args, {db}, info) => {
+  obtenerInformeVonsucro: async (parent, {fechaInicio, fechaFin}, {db}, info) => {
     try {
       return await db.Suertes.findAll({
         attributes: ['id_suerte', 'nombre', 'renovada',
@@ -894,9 +894,21 @@ module.exports= {
           attributes: ['id_corte', 'numero'
           // [ db.sequelize.literal('(SELECT SUM(area) FROM tablones WHERE id_corte=corte_id AND activo=true)',),'area' ]
         ],
-          where: {
-              activo: true
+        where: {
+          [Op.or]: [
+            {
+              fecha_corte: {
+                [Op.lte]: fechaFin
+              }
+            }, {fecha_corte: null}
+          ],
+          fecha_inicio: {
+            [Op.gte]: fechaInicio
           },
+          activo: {
+            [Op.eq]: true
+          }
+        },
           include: [
             {
               model: db.Aplicacion_herbicidas,

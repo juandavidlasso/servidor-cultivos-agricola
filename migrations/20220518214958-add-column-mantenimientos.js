@@ -15,7 +15,7 @@ module.exports = {
       'proximoCambio',
       {
         type: Sequelize.INTEGER,
-        allowNull: false,
+        allowNull: true,
       }
     )
   },

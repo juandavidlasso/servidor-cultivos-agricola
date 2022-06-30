@@ -977,6 +977,19 @@ module.exports= {
       return error
     }
   },
+  // Eliminar Insumo
+  eliminarInsumo: async (parent, {idInsumo}, {db}, info) => {
+    // busco el lista mantenimiento
+    const insumo = await db.Insumos.findOne({ where: idInsumo })
+
+    if (!insumo) throw new Error('No Existe')
+
+    try {
+      return await insumo.destroy()
+    } catch (error) {
+      return error
+    }
+  },
   // Generar PDF y enviar por correo
   enviarInformeCorreo: async (parent, {input, email, asunto}, {db}, info) => {
 

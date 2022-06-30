@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     proximoCambio: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: true
     }
   }, { sequelize, modelName: 'Mantenimientos', timestamps: false });
   return Mantenimientos;

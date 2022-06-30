@@ -55,6 +55,7 @@ module.exports= `
     editarAplicacionMantenimiento(idApMant: Int, input: AplicacionMantenimientoInput) : AplicacionMantenimiento
     eliminarAplicacionMantenimiento(idApMant: Int) : Response
     eliminarListaMantenimiento(idMantenimiento: Int) : Response
+    eliminarInsumo(idInsumo: Int) : Response
     enviarInformeCorreo(input: [informeVonsucro], email: String, asunto: String) : ResponseMessage
   }
 `
