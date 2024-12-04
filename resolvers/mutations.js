@@ -37,7 +37,6 @@ module.exports= {
     }
   },
   autenticarUsuario: async (parent, { input }, { db }, info) => {
-
     const { email, password } = input
 
     // revisar si existe usuario registrado
