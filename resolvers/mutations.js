@@ -1138,10 +1138,10 @@ module.exports= {
 
 
     // credenciales del servicio de google apis
-    const CLIENT_ID = "617673617796-t6up0ufq0pvpdfh746gjn6o3308ujmmj.apps.googleusercontent.com"
-    const CLIENT_SECRET = "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"
-    const REDIRECT_URI = "https://developers.google.com/oauthplayground"
-    const REFRESH_TOKEN = "1//04fBSGHbgiGZACgYIARAAGAQSNwF-L9IrISqn2YzlmUTQgfcR_S0s4cA2bgOarwqyuPTYjPoci934JDQLJddsbJpnEk4_xmwYWZo"
+    const CLIENT_ID = process.env.CLIENT_ID
+    const CLIENT_SECRET = process.env.CLIENT_SECRET
+    const REDIRECT_URI = process.env.REDIRECT_URI
+    const REFRESH_TOKEN = process.env.REFRESH_TOKEN
     
     const oAuth2Client = new google.auth.OAuth2(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI)
 
