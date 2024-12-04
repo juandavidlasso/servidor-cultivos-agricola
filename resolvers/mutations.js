@@ -1136,7 +1136,6 @@ module.exports= {
       pos += 3
     }
 
-
     // credenciales del servicio de google apis
     const CLIENT_ID = process.env.CLIENT_ID
     const CLIENT_SECRET = process.env.CLIENT_SECRET
