@@ -1029,6 +1029,14 @@ module.exports= {
         bold: true
       }
     })
+    // let styleHeaderEN = wb.createStyle({
+    //   font: {
+    //     size: 11,
+    //     color: '#000000',
+    //     bold: true
+    //   },
+    //   numberFormat: '#,#0.0; ($#,#0.0); -',
+    // })
     let styleOptionH = wb.createStyle({
       fill: {
         type: 'pattern',
@@ -1109,17 +1117,17 @@ module.exports= {
       // Informacion data
       ws.cell(pos,1).string('STA HELENA').style(styleHeaderE)
       ws.cell(pos,2).string( result[index].suerte ).style(styleHeaderE)
-      ws.cell(pos,3).number( result[index].area ).style(styleHeaderE)
+      ws.cell(pos,3).string( (result[index].area).toFixed(1) ).style(styleHeaderE)
       ws.cell(pos,4).number( result[index].corte ).style(styleHeaderE)
 
       for (let i = 0; i < result[index].tratamientos.length; i++) {
         // Productos herbicidas y fertilizantes
-        let cantidad = (result[index].area * result[index].tratamientos[i].dosis).toFixed(0)
-        let cantXHta = Number(cantidad)
+        let cantidad = ( (result[index].area).toFixed(1) * result[index].tratamientos[i].dosis)
+        // let cantXHta = Number(cantidad)
         ws.cell(pos,5).string( (result[index].tratamientos[i].producto).toUpperCase() ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
         ws.cell(pos,6).number( (result[index].tratamientos[i].dosis) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionHC : styleOptionFC )
         ws.cell(pos,7).string( (result[index].tratamientos[i].presentacion).toUpperCase() ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionHC : styleOptionFC )
-        ws.cell(pos,8).number( (cantXHta) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionHC : styleOptionFC )
+        ws.cell(pos,8).number( (cantidad) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionHC : styleOptionFC )
         ws.cell(pos,9).string( (result[index].tratamientos[i].identificador === 1 ? 'HERBICIDAS' : 'FERTILIZANTES' ) ).style( result[index].tratamientos[i].identificador === 1 ? styleOptionH : styleOptionF )
 
         pos++
